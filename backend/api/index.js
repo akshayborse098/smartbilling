@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     console.error("Critical server error during cold start:", error);
     res.status(500).json({ 
       message: "An internal server error occurred during connection.",
-      error: process.env.NODE_ENV === "development" ? error.message : undefined 
+      error: error.message || "Unknown error"
     });
   }
 }

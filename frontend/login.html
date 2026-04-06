@@ -493,7 +493,11 @@
             _modal.classList.add("active");
         }
 
-        const API_URL = window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api';
+        // Change this URL to your deployed backend URL before deploying the frontend
+        const DEPLOYED_BACKEND_URL = "https://your-backend-project.vercel.app";
+        const API_URL = window.location.hostname === 'localhost' || window.location.protocol === 'file:' 
+            ? 'http://localhost:5000/api' 
+            : `${DEPLOYED_BACKEND_URL}/api`;
 
         // Authentication logic
         async function handleSignup() {

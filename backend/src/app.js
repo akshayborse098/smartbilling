@@ -19,17 +19,8 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// Serve Frontend Files
 app.get("/", (req, res) => {
-  res.sendFile(path.join(rootDir, "chay.html"));
-});
-
-app.get(["/chay", "/chay.html"], (req, res) => {
-  res.sendFile(path.join(rootDir, "chay.html"));
-});
-
-app.get(["/login", "/login.html"], (req, res) => {
-  res.sendFile(path.join(rootDir, "login.html"));
+  res.json({ status: "API is running", message: "Welcome to SmartBilling API" });
 });
 
 app.use("/api/auth", authRoutes);
