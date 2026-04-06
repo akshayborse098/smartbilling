@@ -141,7 +141,17 @@ export const deleteInvoice = async (req, res) => {
       return res.status(404).json({ message: "Invoice not found" });
     }
 
-    return res.json({ message: "Invoice deleted" });
+    // Restore stocks for each item in the invoice
+    for (const item of invoice.items) {
+      if (item.product) {
+        await Product.findOneAndUpdate(
+          { _id: item.product, createdBy: req.user._id },
+          { $inc: { stock: item.quantity } }
+        );
+      }
+    }
+
+    return res.json({ message: "Invoice deleted and stock restored" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

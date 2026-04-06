@@ -4,7 +4,7 @@ const invoiceItemSchema = new mongoose.Schema(
   {
     product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
     description: { type: String, trim: true },
-    quantity: { type: Number, required: true, min: 1 },
+    quantity: { type: Number, required: true, min: 0 },
     rate: { type: Number, required: true, min: 0 },
   },
   { _id: false }

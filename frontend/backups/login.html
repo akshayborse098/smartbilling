@@ -64,21 +64,6 @@
             animation-delay: -5s;
         }
 
-        @media (max-width: 480px) {
-            .bg-circle-1 {
-                width: 250px;
-                height: 250px;
-                top: -50px;
-                right: -50px;
-            }
-            .bg-circle-2 {
-                width: 200px;
-                height: 200px;
-                bottom: -30px;
-                left: -30px;
-            }
-        }
-
         @keyframes float {
             0% {
                 transform: translateY(0) scale(1);
@@ -90,7 +75,7 @@
         }
 
         .auth-container {
-            width: 92%;
+            width: 100%;
             max-width: 420px;
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
@@ -101,20 +86,7 @@
             position: relative;
             z-index: 1;
             overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        @media (max-width: 400px) {
-            .auth-container {
-                padding: 30px 20px;
-                border-radius: 20px;
-            }
-            .logo-section i {
-                font-size: 2.2rem;
-            }
-            .logo-section h1 {
-                font-size: 1.4rem;
-            }
+            transition: height 0.3s ease;
         }
 
         .logo-section {

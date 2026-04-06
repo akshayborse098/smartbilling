@@ -62,9 +62,8 @@
 
         .profile-area {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 2px;
+            align-items: center;
+            gap: 12px;
         }
 
         .profile-avatar {
@@ -106,7 +105,7 @@
             color: white;
             padding: 0.42rem 1.1rem;
             border-radius: 50px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -114,8 +113,6 @@
             gap: 6px;
             transition: all 0.25s ease;
             backdrop-filter: blur(8px);
-            margin-top: 5px;
-            width: fit-content;
         }
 
         .logout-btn:hover {
@@ -147,14 +144,6 @@
             box-shadow: 0 20px 35px -12px rgba(0, 55, 80, 0.18);
         }
 
-        @media (max-width: 600px) {
-            .glass-card {
-                padding: 1.2rem;
-                border-radius: 20px;
-                margin-bottom: 1rem;
-            }
-        }
-
         .section-title {
             font-size: 1.4rem;
             font-weight: 650;
@@ -176,12 +165,6 @@
 
         .input-group {
             flex: 1 1 180px;
-        }
-
-        @media (max-width: 500px) {
-            .input-group {
-                flex: 1 1 100% !important;
-            }
         }
 
         .input-group label {
@@ -349,16 +332,8 @@
             color: #1f6e8c;
             background: #eef6fb;
             display: inline-block;
-            padding: 0.3rem 1.2rem;
+            padding: 0.3rem 1.5rem;
             border-radius: 60px;
-            transition: font-size 0.25s ease;
-        }
-
-        @media (max-width: 480px) {
-            .total-price {
-                font-size: 1.4rem;
-                padding: 0.2rem 1rem;
-            }
         }
 
         .bottom-nav {
@@ -503,44 +478,21 @@
             }
         }
 
-        @media (max-width: 768px) {
-            .app-header {
-                padding: 1rem;
-                gap: 15px;
+        @media (max-width: 680px) {
+            .glass-card {
+                padding: 1.2rem;
             }
-            .app-header > div:first-child {
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 10px !important;
-            }
-            .profile-area {
-                border-left: none !important;
-                padding-left: 0 !important;
-                border-top: 1px solid rgba(255,255,255,0.1);
-                padding-top: 10px;
-                width: 100%;
-            }
-            .logo-area h1 {
-                font-size: 1.4rem;
-            }
-            .date-badge {
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
-                font-size: 0.75rem;
-                padding: 0.3rem 0.8rem;
-            }
-        }
 
-        @media (max-width: 450px) {
-            .date-badge {
-                display: none; /* Hide date on very small screens to save space */
+            .section-title {
+                font-size: 1.2rem;
             }
-            .profile-info {
-                max-width: 150px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+
+            .total-price {
+                font-size: 1.5rem;
+            }
+
+            .app-header {
+                padding: 0.8rem 1.2rem;
             }
         }
 
@@ -864,30 +816,24 @@
 <body>
 
     <header class="app-header">
-        <div style="display: flex; align-items: center; gap: 20px; flex: 1;">
-            <div class="logo-area">
-                <h1><i class="fas fa-store"></i> SmartBilling</h1>
-                <p>Wholesale Management</p>
-            </div>
-            
-            <div class="profile-area" style="border-left: 1px solid rgba(255,255,255,0.2); padding-left: 20px;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="profile-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="profile-info">
-                        <span class="profile-name" id="profileNameDisplay">User</span>
-                        <span class="profile-role">Admin</span>
-                    </div>
-                </div>
-                <button class="logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
+        <div class="logo-area">
+            <h1><i class="fas fa-store"></i> SmartBilling</h1>
+            <p>Wholsale Management</p>
         </div>
-
         <div class="date-badge">
             <i class="far fa-calendar-alt"></i> <span id="headerDate"></span>
+        </div>
+        <div class="profile-area">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <span class="profile-name" id="profileNameDisplay">User</span>
+                <span class="profile-role">Admin</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
     </header>
 
@@ -1292,7 +1238,6 @@
         let currentPurchaseItems = [];
         let editingProductKey = null;
         let isBillSaved = false;
-        let currentSavedInvoiceId = null; // Track ID of the bill we just saved
 
         // API Helper
         async function fetchWithAuth(endpoint, options = {}) {
@@ -1763,7 +1708,6 @@
                     if (ok) {
                         currentBillItems = [];
                         isBillSaved = false;
-                        currentSavedInvoiceId = null;
                         document.getElementById("saveBillBtn").style.display = "inline-flex";
                         document.getElementById("printBillBtn").style.display = "none";
                         renderBillTable();
@@ -1772,7 +1716,6 @@
                 });
             } else {
                 isBillSaved = false;
-                currentSavedInvoiceId = null;
                 document.getElementById("saveBillBtn").style.display = "inline-flex";
                 document.getElementById("printBillBtn").style.display = "none";
                 customerNameInput.value = "";
@@ -1834,7 +1777,6 @@
 
             if (res) {
                 isBillSaved = true;
-                currentSavedInvoiceId = res._id; // Capture ID for later editing/deletion
                 document.getElementById("saveBillBtn").style.display = "none";
                 document.getElementById("downloadPdfBtn").style.display = "inline-flex";
                 document.getElementById("whatsappShareBtn").style.display = "inline-flex";
@@ -1845,26 +1787,36 @@
             }
         }
 
-        async function editBillHandler() {
+        function editBillHandler() {
             if (!isBillSaved) return;
             if (currentBillItems.length === 0) return;
 
-            showConfirm("Unlock this bill for editing? This will restore the deducted stock on the server until you save again.", "warning").then(async ok => {
+            showConfirm("Unlock this bill for editing? This will restore the deducted stock until you save again.", "warning").then(ok => {
                 if (ok) {
-                    if (currentSavedInvoiceId) {
-                        // Delete from server to restore stock (newly implemented in backend)
-                        const res = await fetchWithAuth(`/invoices/${currentSavedInvoiceId}`, { method: 'DELETE' });
-                        if (res) {
-                            currentSavedInvoiceId = null;
-                        } else {
-                            showAlert("Warning: Invoice could not be removed from server. Your edit might cause duplicate records.", "warning");
+                    // Restore stock
+                    let stockUpdated = false;
+                    for (let it of currentBillItems) {
+                        if (products[it.productKey]) {
+                            let currentStock = products[it.productKey].stock || 0;
+                            let packetsToRestore = it.packetQty + (it.pieceQty / it.piecesPerPacket);
+                            products[it.productKey].stock = currentStock + packetsToRestore;
+                            stockUpdated = true;
                         }
                     }
+                    if (stockUpdated) {
+                        persistProducts();
+                        renderProducts();
+                    }
+
+                    // Remove from sales history
+                    sales.pop();
+                    localStorage.setItem(salesKey, JSON.stringify(sales));
+                    calculateReports();
 
                     isBillSaved = false;
                     document.getElementById("saveBillBtn").style.display = "inline-flex";
                     renderBillTable(); // Show edit/remove buttons again
-                    showAlert("Bill unlocked! Stock has been restored on server.", "edit");
+                    showAlert("Bill unlocked! Stock has been restored temporarily.", "edit");
                 }
             });
         }
