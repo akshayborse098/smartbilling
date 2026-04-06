@@ -1220,8 +1220,8 @@
         // ======================== MERN DATABASE INTEGRATION ========================
         const userid = localStorage.getItem("prostock_userid");
         const token = localStorage.getItem("prostock_token");
-        // Change this URL to your deployed backend URL before deploying the frontend
-        const DEPLOYED_BACKEND_URL = "https://your-backend-project.vercel.app";
+        // Render Backend URL
+        const DEPLOYED_BACKEND_URL = "https://smartbilling-l47g.onrender.com";
         const API_URL = window.location.hostname === 'localhost' || window.location.protocol === 'file:' 
             ? 'http://localhost:5000/api' 
             : `${DEPLOYED_BACKEND_URL}/api`;
