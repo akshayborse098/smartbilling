@@ -1,0 +1,2673 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ProStock | Wholesale Manager Suite</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- html2pdf.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        /* ====== COMPLETE CSS (Integrated) ====== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f7fc 0%, #e2edf5 100%);
+            color: #1a3b4f;
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+
+        .app-header {
+            background: linear-gradient(115deg, #0b3b4f 0%, #1f6e8c 100%);
+            color: white;
+            padding: 1rem 1.8rem;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area h1 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-area p {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        .profile-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.22);
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .profile-name {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .profile-role {
+            font-size: 0.68rem;
+            opacity: 0.75;
+            color: white;
+        }
+
+        .logout-btn {
+            background: rgba(255, 80, 80, 0.22);
+            border: 1.5px solid rgba(255, 120, 120, 0.4);
+            color: white;
+            padding: 0.42rem 1.1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .logout-btn:hover {
+            background: rgba(220, 50, 50, 0.55);
+            border-color: rgba(255, 120, 120, 0.7);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(200, 0, 0, 0.25);
+        }
+
+        .main-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+            padding: 1.6rem;
+            margin-bottom: 1.8rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 35px -12px rgba(0, 55, 80, 0.18);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 650;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #2c8fb0;
+            padding-left: 18px;
+            color: #1c5a72;
+        }
+
+        .form-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 0.8rem;
+        }
+
+        .input-group {
+            flex: 1 1 180px;
+        }
+
+        .input-group label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #2c7c9e;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 24px;
+            border: 1.8px solid #e2eff5;
+            background: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.25s ease;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2c8fb0;
+            box-shadow: 0 0 0 4px rgba(44, 143, 176, 0.15);
+        }
+
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #cde3ec;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 55, 80, 0.15);
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 1000;
+            margin-top: 6px;
+            padding: 8px 0;
+        }
+
+        .dropdown-list.hidden {
+            display: none;
+        }
+
+        .dropdown-item {
+            padding: 10px 18px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #1a3b4f;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #e4f0f5;
+            color: #1f6e8c;
+            font-weight: 500;
+        }
+
+        button {
+            background: linear-gradient(105deg, #206f8f, #2c8fb0);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -6px rgba(32, 111, 143, 0.5);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 20px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .data-table th {
+            background: #e4f0f5;
+            color: #1d627b;
+            padding: 14px 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            text-align: left;
+        }
+
+        .data-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e6f0f5;
+            vertical-align: middle;
+        }
+
+        .data-table th:nth-child(2),
+        .data-table td:nth-child(2),
+        .data-table th:nth-child(3),
+        .data-table td:nth-child(3),
+        .data-table th:nth-child(4),
+        .data-table td:nth-child(4) {
+            text-align: center;
+        }
+
+        .data-table th:nth-child(5),
+        .data-table td:nth-child(5),
+        .data-table th:last-child,
+        .data-table td:last-child {
+            text-align: right;
+        }
+
+        .data-table tr:hover {
+            background: #fafffe;
+        }
+
+        .action-icons button {
+            background: transparent;
+            color: #2c8fb0;
+            padding: 6px 10px;
+            font-size: 1rem;
+            box-shadow: none;
+        }
+
+        .action-icons button:hover {
+            background: #eef3f8;
+            transform: scale(1.05);
+        }
+
+        .badge-stock {
+            font-size: 0.7rem;
+            background: #e9f2f6;
+            border-radius: 40px;
+            padding: 4px 12px;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .total-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1f6e8c;
+            background: #eef6fb;
+            display: inline-block;
+            padding: 0.3rem 1.5rem;
+            border-radius: 60px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.65rem 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 200;
+        }
+
+        .nav-btn {
+            flex: 1;
+            background: none;
+            color: #6e8f9c;
+            font-size: 1.3rem;
+            gap: 6px;
+            flex-direction: column;
+            border-radius: 40px;
+            padding: 8px;
+        }
+
+        .nav-btn span {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .nav-btn.active {
+            color: #1f6e8c;
+            background: #e5f0f5;
+        }
+
+        /* Report Cards Styles */
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .report-card {
+            background: white;
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0, 55, 80, 0.05);
+            border: 1px solid #f0f7f9;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .report-card i {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .report-card .report-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1f6e8c;
+        }
+
+        .report-card .report-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #6e8f9c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .report-card.today i {
+            color: #2c8fb0;
+        }
+
+        .report-card.yesterday i {
+            color: #f57c00;
+        }
+
+        .report-card.monthly i {
+            color: #28a745;
+        }
+
+        .report-card.top-product i {
+            color: #7b1fa2;
+        }
+
+        .top-product-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a3b4f;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .hidden-page {
+            display: none !important;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 24px;
+            color: #7f9fab;
+            padding-top: 18px;
+            border-top: 1px dashed #cde3ec;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #printBillSection,
+            #printBillSection * {
+                visibility: visible;
+            }
+
+            #printBillSection {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 20px;
+                z-index: 9999;
+            }
+
+            .bottom-nav,
+            .app-header,
+            button {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .glass-card {
+                padding: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .total-price {
+                font-size: 1.5rem;
+            }
+
+            .app-header {
+                padding: 0.8rem 1.2rem;
+            }
+        }
+
+        #printBillSection {
+            display: none;
+        }
+
+        #stockCounter {
+            background: #e1f0f5;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+        }
+
+        /* Low Stock Highlighting */
+        .low-stock-badge {
+            background: #ffeded;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+            animation: pulse-red 2s infinite;
+        }
+
+        .text-danger-bold {
+            color: #d32f2f;
+            font-weight: 700;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(211, 47, 47, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(211, 47, 47, 0);
+            }
+        }
+
+        ::placeholder {
+            color: #b2cfdf;
+        }
+
+        button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        #resetBillBtn.new-bill-active {
+            background: linear-gradient(105deg, #1a8c4e, #28a745) !important;
+            animation: pulse-green 1.6s infinite;
+        }
+
+        @keyframes pulse-green {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(40, 167, 69, 0);
+            }
+        }
+
+        /* ===== CUSTOM MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 40, 60, 0.55);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem 2rem 1.6rem;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 30px 60px rgba(0, 55, 80, 0.22);
+            transform: scale(0.88) translateY(20px);
+            transition: transform 0.28s cubic-bezier(.34, 1.56, .64, 1), opacity 0.25s ease;
+            opacity: 0;
+            text-align: center;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin: 0 auto 1rem;
+        }
+
+        .modal-icon.info {
+            background: #e3f2fc;
+            color: #1f6e8c;
+        }
+
+        .modal-icon.success {
+            background: #e6f9ee;
+            color: #28a745;
+        }
+
+        .modal-icon.warning {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .modal-icon.danger {
+            background: #fdecea;
+            color: #d32f2f;
+        }
+
+        .modal-icon.edit {
+            background: #ede7f6;
+            color: #7b1fa2;
+        }
+
+        .modal-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1a3b4f;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-msg {
+            font-size: 0.88rem;
+            color: #5a7a8a;
+            line-height: 1.6;
+            margin-bottom: 1.4rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: 1.8px solid #d0e8f0;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            margin-bottom: 1.2rem;
+            transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+            border-color: #2c8fb0;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn.primary {
+            background: linear-gradient(105deg, #206f8f, #2c8fb0);
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(32, 111, 143, 0.4);
+        }
+
+        .modal-btn.danger-btn {
+            background: linear-gradient(105deg, #c0392b, #e74c3c);
+            color: white;
+        }
+
+        .modal-btn.danger-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(192, 57, 43, 0.4);
+        }
+
+        .modal-btn.secondary {
+            background: #eef3f8;
+            color: #5a7a8a;
+        }
+
+        .modal-btn.secondary:hover {
+            background: #dde8ef;
+        }
+
+        .date-badge {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            padding: 0.45rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+        }
+
+        /* --- Bill History Filter Styling --- */
+        .history-filter-wrapper {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(44, 143, 176, 0.05);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(44, 143, 176, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .history-filter-wrapper:focus-within {
+            background: rgba(44, 143, 176, 0.1);
+            border-color: rgba(44, 143, 176, 0.3);
+            box-shadow: 0 4px 12px rgba(44, 143, 176, 0.08);
+        }
+
+        .history-filter-wrapper label {
+            font-size: 0.72rem;
+            color: #1c5a72;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .history-filter-wrapper input[type="date"] {
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            width: 145px;
+            border: none;
+            background: transparent;
+            color: #1a3b4f;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            border-radius: 0;
+        }
+
+        .clear-filter-btn {
+            background: #fdecea;
+            color: #d32f2f;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: none;
+            /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #f9d5d3;
+            padding: 0;
+        }
+
+        .clear-filter-btn:hover {
+            background: #f9d5d3;
+            transform: scale(1.1);
+        }
+
+        .clear-filter-btn.active {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .history-filter-wrapper {
+                margin: 10px 0 0 0;
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="app-header">
+        <div class="logo-area">
+            <h1><i class="fas fa-store"></i> SmartBilling</h1>
+            <p>Wholsale Management</p>
+        </div>
+        <div class="date-badge">
+            <i class="far fa-calendar-alt"></i> <span id="headerDate"></span>
+        </div>
+        <div class="profile-area">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <span class="profile-name" id="profileNameDisplay">User</span>
+                <span class="profile-role">Admin</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- PRODUCT PANEL -->
+        <div id="productPanel">
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-cube"></i> Product Management
+                </div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label><i class="fas fa-tag"></i> Product name</label>
+                        <input type="text" id="prodName" placeholder="Product Add">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-rupee-sign"></i>Sell price (₹)</label>
+                        <input type="number" id="prodPrice" placeholder="Price per packet">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-puzzle-piece"></i> Pieces</label>
+                        <input type="number" id="prodPieces" placeholder="Total pieces in packet">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-boxes"></i> Stock (Pkts)</label>
+                        <div style="display:flex; gap:8px;">
+                            <input type="number" id="prodStock" placeholder="Packets in stock" style="width: 70%;">
+                            <button id="addMiscStockBtn" type="button"
+                                style="width: 30%; background:#28a745; padding: 12px; border-radius: 24px;"
+                                title="Add quantity to current stock"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group" style="flex:0.6;">
+                        <label>&nbsp;</label>
+                        <button id="saveProductBtn"><i class="fas fa-save"></i> Save product</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-list-ul"></i> Product Catalog
+                    <span style="margin-left: auto;" id="stockCounter"></span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th> SELL Price (₹)</th>
+                                <th>Pieces/pkt</th>
+                                <th>Stock</th>
+                                <th>Action</th>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align:center;">✨ No products yet — add above</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BILL PANEL (hidden initially) -->
+        <div id="billPanel" class="hidden-page">
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-receipt"></i> New Invoice
+                </div>
+                <div class="form-grid">
+                    <div class="input-group" style="flex:1">
+                        <label><i class="fas fa-hashtag"></i> Invoice #</label>
+                        <input type="text" id="invoiceNoDisplay" readonly
+                            style="background:#f5f9fc; font-weight:bold; color:#1f6e8c;">
+                    </div>
+                    <div class="input-group" style="flex:3">
+                        <label><i class="fas fa-user"></i> Customer name</label>
+                        <input type="text" id="customerName" placeholder="Customer Name">
+                    </div>
+                    <div class="input-group" style="flex:1.5">
+                        <label><i class="fas fa-calendar"></i> Date</label>
+                        <input type="text" id="billDateDisplay" readonly style="background:#f5f9fc;">
+                    </div>
+                    <div class="input-group" style="flex:1.5">
+                        <label><i class="fas fa-money-check-alt"></i> Payment Status</label>
+                        <select id="paymentStatus">
+                            <option value="Paid">Paid</option>
+                            <option value="Unpaid">Unpaid</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="position: relative; z-index: 50;">
+                <div class="section-title">
+                    <i class="fas fa-cart-plus"></i> Add items
+                </div>
+                <div class="form-grid">
+                    <div class="input-group" style="flex:2">
+                        <label>Search product</label>
+                        <div class="custom-dropdown">
+                            <input type="text" id="billProductSelect" placeholder="-- Type to search --"
+                                autocomplete="off">
+                            <div id="billProductList" class="dropdown-list hidden"></div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Packets qty</label>
+                        <input type="number" id="packetQuantity" placeholder="0" value="0" min="">
+                    </div>
+                    <div class="input-group">
+                        <label>pieces</label>
+                        <input type="number" id="pieceQuantity" placeholder="0" value="0" min="0">
+                    </div>
+                    <div class="input-group" style="flex:0.8">
+                        <label>&nbsp;</label>
+                        <button id="addToBillBtn"><i class="fas fa-plus-circle"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-shopping-basket"></i> Bill items
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table bill-items-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>sell Price (₹)</th>
+                                <th>Packets</th>
+                                <th>Pieces</th>
+                                <th>Amount (₹)</th>
+                                <th></th>
+                        </thead>
+                        <tbody id="billItemsBody">
+                            <tr>
+                                <td colspan="6" style="text-align:center;">🛒 Cart is empty</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 12px;">
+                    <div><strong>GRAND TOTAL</strong> <span class="total-price" id="grandTotalSpan">₹ 0.00</span></div>
+                    <div class="bill-actions">
+                        <button id="saveBillBtn" class="primary-btn"><i class="fas fa-save"></i> Save Bill</button>
+                        <button id="editBillBtn" class="secondary-btn" style="display:none;"><i class="fas fa-edit"></i>
+                            Edit Bill</button>
+                        <button id="downloadPdfBtn" class="pdf-btn" style="display:none;"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                        <button id="printBillBtn" class="secondary-btn" style="display:none;"><i class="fas fa-print"></i> Print Bill</button>
+                        <button id="whatsappShareBtn" class="wa-btn" style="display:none;"><i class="fab fa-whatsapp"></i> Share on WA</button>
+                        <button id="resetBillBtn" class="secondary-btn"><i class="fas fa-plus"></i> New Bill</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REPORTS PANEL (hidden initially) -->
+        <div id="reportPanel" class="hidden-page">
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-chart-line"></i> Sales Performance
+                </div>
+
+                <div class="report-grid">
+                    <div class="report-card today">
+                        <i class="fas fa-calendar-day"></i>
+                        <span class="report-label">Today Total Sale</span>
+                        <span class="report-value" id="todaySaleVal">₹ 0.00</span>
+                    </div>
+                    <div class="report-card yesterday">
+                        <i class="fas fa-history"></i>
+                        <span class="report-label">Yesterday Sale</span>
+                        <span class="report-value" id="yesterdaySaleVal">₹ 0.00</span>
+                    </div>
+                    <div class="report-card monthly">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="report-label">Monthly Total</span>
+                        <span class="report-value" id="monthlySaleVal">₹ 0.00</span>
+                    </div>
+                    <div class="report-card top-product">
+                        <i class="fas fa-trophy"></i>
+                        <span class="report-label">Top Selling Product</span>
+                        <span class="report-value" id="topProductVal" style="font-size: 1.4rem;">--</span>
+                        <small class="report-label" id="topProductQty"
+                            style="font-size: 0.7rem; margin-top: -5px; opacity: 0.8;"></small>
+                    </div>
+                </div>
+
+
+                <div class="glass-card" style="margin-top: 20px;">
+                    <div class="section-title" style="flex-wrap: wrap; height: auto; min-height: 48px;">
+                        <i class="fas fa-history"></i> Bill History
+                        <div class="history-filter-wrapper">
+                            <label><i class="fas fa-filter"></i> Date:</label>
+                            <input type="date" id="historyDateFilter">
+                            <button id="clearHistoryFilter" class="clear-filter-btn" title="Clear Filter">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-bottom: 15px; flex-wrap: wrap; align-items: center;">
+                        <div class="input-group" style="flex: 2; min-width: 250px; margin-bottom: 0;">
+                            <input type="text" id="globalSearch"
+                                placeholder="🔍 Search Invoice #, Customer or Product..."
+                                style="border-radius: 12px; padding: 10px 15px;">
+                        </div>
+                        <button id="exportExcelBtn"
+                            style="background: #1d6f42; border-radius: 12px; padding: 10px 20px;"><i
+                                class="fas fa-file-excel"></i> Export CSV</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Inv #</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Total (₹)</th>
+                                    <th>Status</th>
+                                    <th style="text-align:right;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="billHistoryBody">
+                                <!-- JavaScript will populate this -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="glass-card"
+                    style="margin-bottom: 0; box-shadow: none; border: 1px dashed #cde3ec; background: #f9fcfd;">
+                    <p style="text-align: center; color: #5a7a8a; font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i> Sales data is updated automatically whenever you save a new
+                        bill.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PURCHASE PANEL (NEW) -->
+        <div id="purchasePanel" class="hidden-page">
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-truck-loading"></i> New Purchase Bill
+                </div>
+                <div class="form-grid">
+                    <div class="input-group" style="flex: 2;">
+                        <label><i class="fas fa-building"></i> Supplier Name</label>
+                        <input type="text" id="purSupplier" placeholder="Distributor/Supplier Name">
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="position: relative; z-index: 40;">
+                <div class="section-title">
+                    <i class="fas fa-cart-plus"></i> Add Items to Purchase
+                </div>
+                <div class="form-grid">
+                    <div class="input-group" style="flex: 2 1 220px;">
+                        <label><i class="fas fa-tag"></i> Product Name</label>
+                        <select id="purProdName" style="cursor:pointer;" class="modal-input" style="margin-bottom:0px;">
+                            <option value="">-- Select Product --</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-boxes"></i> Qty (Pkts)</label>
+                        <input type="number" id="purQty" placeholder="0">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-puzzle-piece"></i> Pieces/Pkt</label>
+                        <input type="number" id="purPieces" placeholder="0">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-rupee-sign"></i> Price/Pkt (₹)</label>
+                        <input type="number" id="purPrice" placeholder="0">
+                    </div>
+                    <div class="input-group" style="flex: 0.8 1 120px;">
+                        <label>&nbsp;</label>
+                        <div style="display: flex; gap: 8px;">
+                            <button id="addPurchaseItemBtn" style="background:#1f6e8c; width: 100%;"><i
+                                    class="fas fa-plus"></i> Add</button>
+                            <button id="cancelPurEditBtn"
+                                style="display:none; background:#94a3b0; border-radius:12px; padding:12px 16px;"
+                                title="Cancel Edit"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <p id="purHintText" style="font-size:0.75rem; color:#6e8f9c; margin-top:8px;">
+                    <i class="fas fa-info-circle"></i> You can only purchase existing products. Add new products in
+                    Product Management first.
+                </p>
+            </div>
+
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-shopping-basket"></i> Purchase Cart
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Purchase Price (₹)</th>
+                                <th>Qty (Pkts)</th>
+                                <th>Pieces/Pkt</th>
+                                <th style="text-align:right;">Total (₹)</th>
+                                <th style="text-align:center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="purchaseCartBody">
+                            <tr>
+                                <td colspan="6" style="text-align:center;">🛒 Cart is empty</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 12px;">
+                    <div><strong>GRAND TOTAL</strong> <span class="total-price" id="purchaseGrandTotal">₹ 0.00</span>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button id="savePurchaseBillBtn" style="background:#28a745;"><i class="fas fa-save"></i> Save
+                            Purchase</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-history"></i> Purchase History
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Supplier</th>
+                                <th>Product Name</th>
+                                <th>Pur Price (₹)</th>
+                                <th>Qty (Pkts)</th>
+                                <th>Pieces/Pkt</th>
+                                <th style="text-align:right;">Total (₹)</th>
+                                <th style="text-align:center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="purchaseHistoryBody">
+                            <tr>
+                                <td colspan="8" style="text-align:center;">📦 No purchase records found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-btn" data-page="product"><i class="fas fa-box"></i><span>Products</span></button>
+        <button class="nav-btn" data-page="purchase"><i class="fas fa-truck"></i><span>Purchases</span></button>
+        <button class="nav-btn" data-page="bill"><i class="fas fa-file-invoice-dollar"></i><span>Billing</span></button>
+        <button class="nav-btn" data-page="report"><i class="fas fa-chart-pie"></i><span>Reports</span></button>
+    </div>
+
+    <div id="printBillSection"></div>
+
+    <!-- CUSTOM MODAL -->
+    <div class="modal-overlay" id="customModal">
+        <div class="modal-box">
+            <div class="modal-icon" id="modalIcon"><i id="modalIconI" class="fas fa-info-circle"></i></div>
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-msg" id="modalMsg"></div>
+            <input class="modal-input" id="modalInput" type="text" style="display:none;">
+            <div class="modal-actions" id="modalActions"></div>
+        </div>
+    </div>
+
+    <script>
+        // ======================== MERN DATABASE INTEGRATION ========================
+        const userid = localStorage.getItem("prostock_userid");
+        const token = localStorage.getItem("prostock_token");
+        const API_URL = window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api';
+
+        if (!userid || !token) {
+            window.location.href = "login.html";
+        }
+
+        let products = {}; // Now a Map-like object from server
+        let sales = [];    // Now from server
+        let purchases = []; // Now from server
+
+        let currentBillItems = [];
+        let currentPurchaseItems = [];
+        let editingProductKey = null;
+        let isBillSaved = false;
+
+        // API Helper
+        async function fetchWithAuth(endpoint, options = {}) {
+            const url = `${API_URL}${endpoint}`;
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                ...options.headers
+            };
+
+            try {
+                const response = await fetch(url, { ...options, headers });
+                const data = await response.json();
+
+                if (response.status === 401) {
+                    localStorage.removeItem("prostock_token");
+                    window.location.href = "login.html";
+                    return null;
+                }
+
+                if (!response.ok) throw new Error(data.message || 'API Error');
+                return data;
+            } catch (err) {
+                console.error(`Fetch Error [${endpoint}]:`, err);
+                showAlert(err.message, "danger");
+                return null;
+            }
+        }
+
+        // Initialization Logic
+        async function loadDataFromServer() {
+            const serverProducts = await fetchWithAuth('/products');
+            const serverSales = await fetchWithAuth('/invoices'); // Backend calls sales 'invoices'
+            const serverPurchases = await fetchWithAuth('/purchases');
+
+            if (serverProducts) {
+                // Convert array to object for compatibility with existing code
+                products = {};
+                serverProducts.forEach(p => {
+                    products[p.name] = {
+                        _id: p._id,
+                        price: p.price,
+                        pieces: p.pieces,
+                        stock: p.stock
+                    };
+                });
+            }
+            if (serverSales) sales = serverSales.map(s => ({
+                ...s,
+                invoiceNo: s.invoiceNumber, // align naming
+                total: s.total,
+                date: s.createdAt,
+                customer: s.customer?.name || "Unknown",
+                paymentStatus: s.status === 'paid' ? 'Paid' : 'Unpaid'
+            }));
+            if (serverPurchases) {
+                purchases = serverPurchases;
+                renderPurchases();
+            }
+
+            // Sync Logic: If local has data but server is empty, offer migration
+            const localProducts = JSON.parse(localStorage.getItem("products_" + userid));
+            if (localProducts && Object.keys(products).length === 0) {
+                showConfirm("We found existing data in your browser. Do you want to sync it to the cloud database?", "info").then(async ok => {
+                    if (ok) {
+                        const res = await fetchWithAuth('/products/sync', {
+                            method: 'POST',
+                            body: JSON.stringify({ products: localProducts })
+                        });
+                        if (res) {
+                            showAlert("Data synced successfully!", "success");
+                            loadDataFromServer();
+                        }
+                    }
+                });
+            }
+
+            renderProducts();
+            calculateReports();
+        }
+
+        // Run on start
+        window.addEventListener('DOMContentLoaded', loadDataFromServer);
+
+        function getNextInvoiceNo() {
+            if (sales.length === 0) return "0001";
+            const last = sales[0].invoiceNo; // newest is at top usually or we search max
+            const next = sales.reduce((max, s) => Math.max(max, parseInt(s.invoiceNo) || 0), 0) + 1;
+            return next.toString().padStart(4, '0');
+        }
+
+        // ===== CUSTOM MODAL HELPERS =====
+        const _modal = document.getElementById("customModal");
+        const _modalIcon = document.getElementById("modalIcon");
+        const _modalIconI = document.getElementById("modalIconI");
+        const _modalTitle = document.getElementById("modalTitle");
+        const _modalMsg = document.getElementById("modalMsg");
+        const _modalInput = document.getElementById("modalInput");
+        const _modalActions = document.getElementById("modalActions");
+
+        function _openModal(type, iconCls, title, msg, actions, withInput) {
+            _modalIcon.className = "modal-icon " + type;
+            _modalIconI.className = iconCls;
+            _modalTitle.textContent = title;
+            _modalMsg.innerHTML = msg; // Update to innerHTML for formatted msgs
+            _modalInput.style.display = withInput ? "block" : "none";
+            if (withInput) { _modalInput.value = ""; setTimeout(() => _modalInput.focus(), 300); }
+            _modalActions.innerHTML = "";
+            actions.forEach(a => {
+                const b = document.createElement("button");
+                b.className = "modal-btn " + a.cls;
+                b.textContent = a.label;
+                b.onclick = a.fn;
+                _modalActions.appendChild(b);
+            });
+            _modal.classList.add("active");
+        }
+        function _closeModal() { _modal.classList.remove("active"); }
+
+        function showAlert(msg, type) {
+            const cfg = {
+                info: { icon: "fas fa-info-circle", title: "Info" },
+                success: { icon: "fas fa-check-circle", title: "Success" },
+                warning: { icon: "fas fa-exclamation-triangle", title: "Warning" },
+                danger: { icon: "fas fa-times-circle", title: "Error" },
+                edit: { icon: "fas fa-pencil-alt", title: "Edit Mode" },
+            };
+            const t = type || "info";
+            const c = cfg[t] || cfg.info;
+            return new Promise(resolve => {
+                _openModal(t, c.icon, c.title, msg, [
+                    { label: "OK", cls: "primary", fn: () => { _closeModal(); resolve(); } }
+                ], false);
+            });
+        }
+
+        function showConfirm(msg, type) {
+            const cfg = {
+                danger: { icon: "fas fa-exclamation-circle", title: "Confirm" },
+                warning: { icon: "fas fa-exclamation-triangle", title: "Confirm" },
+                info: { icon: "fas fa-cloud-upload-alt", title: "Migration Opportunity" },
+            };
+            const t = type || "warning";
+            const c = cfg[t] || cfg.warning;
+            return new Promise(resolve => {
+                _openModal(t, c.icon, c.title, msg, [
+                    { label: "Cancel", cls: "secondary", fn: () => { _closeModal(); resolve(false); } },
+                    { label: "Yes, Confirm", cls: (t === "danger" ? "danger-btn" : "primary"), fn: () => { _closeModal(); resolve(true); } }
+                ], false);
+            });
+        }
+
+        function showPrompt(msg, defaultVal, customTitle) {
+            return new Promise(resolve => {
+                _modalInput.value = defaultVal || "";
+                _openModal("info", "fas fa-user-circle", customTitle || "Enter Name", msg, [
+                    { label: "Continue", cls: "primary", fn: () => { _closeModal(); resolve(_modalInput.value.trim() || defaultVal || "Admin"); } }
+                ], true);
+                _modalInput.onkeydown = e => { if (e.key === "Enter") { _closeModal(); resolve(_modalInput.value.trim() || defaultVal || "Admin"); } };
+            });
+        }
+        // ===== END MODAL HELPERS =====
+
+        // DOM elements
+        const productTbody = document.getElementById("productTableBody");
+        const billProductSelect = document.getElementById("billProductSelect");
+        const billItemsBody = document.getElementById("billItemsBody");
+        const grandTotalSpan = document.getElementById("grandTotalSpan");
+        const customerNameInput = document.getElementById("customerName");
+        const billDateDisplay = document.getElementById("billDateDisplay");
+        // Profile display
+
+        // Helper functions
+        function formatINR(val) { return `₹ ${Number(val).toFixed(2)}`; }
+        function escapeHtml(str) { if (!str) return ""; return str.replace(/[&<>]/g, function (m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
+
+        function persistProducts() { localStorage.setItem(productsKey, JSON.stringify(products)); }
+
+        // Render product table + dropdown
+        function renderProducts() {
+            const productNames = Object.keys(products);
+            if (productNames.length === 0) {
+                productTbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">📦 No products, add using the form</td></tr>`;
+                document.getElementById("billProductList").innerHTML = ``;
+                billProductSelect.placeholder = "-- No products --";
+                document.getElementById("stockCounter").innerHTML = "";
+                return;
+            }
+            let html = "";
+            for (let name of productNames) {
+                const p = products[name];
+                const perPiece = (p.price / p.pieces).toFixed(2);
+                const stockVal = +(p.stock || 0).toFixed(2);
+                const isLowStock = stockVal < 21;
+
+                const stockDisplay = isLowStock
+                    ? `<span class="text-danger-bold">${stockVal}</span> <span class="low-stock-badge"><i class="fas fa-exclamation-triangle"></i> LOW</span>`
+                    : `<span>${stockVal}</span>`;
+
+                html += `<tr ${isLowStock ? 'style="background: #fffcfc;"' : ''}>
+                        <td><strong>${escapeHtml(name)}</strong></td>
+                        <td>${formatINR(p.price)}</td>
+                        <td>${p.pieces}</td>
+                        <td>${stockDisplay}</td>
+                        <td class="action-icons">
+                            <button class="edit-product-btn" data-name="${escapeHtml(name)}" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="delete-product-btn" data-name="${escapeHtml(name)}" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                     </tr>`;
+            }
+            productTbody.innerHTML = html;
+            document.getElementById("stockCounter").innerHTML = `📦 ${productNames.length} items`;
+
+            let listHtml = ``;
+            for (let name of productNames) {
+                const stockStr = +(products[name].stock || 0).toFixed(2);
+                listHtml += `<div class="dropdown-item" data-value="${escapeHtml(name)}">
+                <div style="display:flex; justify-content:space-between; width:100%;">
+                    <span>${escapeHtml(name)}</span>
+                    <span style="color:#6e8f9c; font-size:0.8em;">Stock: ${stockStr}</span>
+                </div>
+            </div>`;
+            }
+            // bill dropdown
+            const menu = document.getElementById("billProductList");
+            menu.innerHTML = listHtml;
+            billProductSelect.placeholder = "-- Type to search --";
+            menu.querySelectorAll(".dropdown-item").forEach(item => {
+                item.addEventListener("click", function () {
+                    billProductSelect.value = this.getAttribute("data-value");
+                    menu.classList.add("hidden");
+                });
+            });
+
+            // purchase dropdown
+            const purMenu = document.getElementById("purProdName");
+            if (purMenu && purMenu.tagName === "SELECT") {
+                let optionsHtml = `<option value="">-- Select Product --</option>`;
+                for (let name of productNames) {
+                    optionsHtml += `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
+                }
+                purMenu.innerHTML = optionsHtml;
+            }
+
+            // attach edit/delete events
+            document.querySelectorAll(".edit-product-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const name = btn.getAttribute("data-name");
+                    editProductUI(name);
+                });
+            });
+            document.querySelectorAll(".delete-product-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const name = btn.getAttribute("data-name");
+                    const prod = products[name];
+                    if (!prod) return;
+
+                    showConfirm(`Delete "${name}" permanently? This cannot be undone.`, "danger").then(async ok => {
+                        if (ok) {
+                            const res = await fetchWithAuth(`/products/${prod._id}`, { method: 'DELETE' });
+                            if (res) {
+                                delete products[name];
+                                if (editingProductKey === name) editingProductKey = null;
+                                renderProducts();
+                                if (currentBillItems.length) showAlert("Bill items remains, product removed from database.", "warning");
+                            }
+                        }
+                    });
+                });
+            });
+        }
+
+        function editProductUI(productName) {
+            const prod = products[productName];
+            if (!prod) return;
+            editingProductKey = productName;
+            document.getElementById("prodName").value = productName;
+            document.getElementById("prodPrice").value = prod.price;
+            document.getElementById("prodPieces").value = prod.pieces;
+            document.getElementById("prodStock").value = prod.stock !== undefined ? +(prod.stock).toFixed(2) : 0;
+            document.querySelector(".glass-card").scrollIntoView({ behavior: "smooth" });
+        }
+
+        async function saveProduct() {
+            let name = document.getElementById("prodName").value.trim();
+            let price = parseFloat(document.getElementById("prodPrice").value);
+            let pieces = parseInt(document.getElementById("prodPieces").value);
+            let stock = parseFloat(document.getElementById("prodStock").value);
+            if (isNaN(stock) || stock < 0) stock = 0;
+
+            if (!name) { showAlert("Product name is required.", "warning"); return; }
+            if (isNaN(price) || price <= 0) { showAlert("sell price must be greater than 0.", "warning"); return; }
+            if (isNaN(pieces) || pieces <= 0) { showAlert("Pieces per packet must be greater than 0.", "warning"); return; }
+
+            const prodData = { name, price, pieces, stock };
+            let res;
+
+            if (editingProductKey) {
+                const prod = products[editingProductKey];
+                res = await fetchWithAuth(`/products/${prod._id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(prodData)
+                });
+            } else {
+                if (products[name]) {
+                    showAlert(`Product "${name}" already exists! Use edit to update it.`, "warning");
+                    return;
+                }
+                res = await fetchWithAuth('/products', {
+                    method: 'POST',
+                    body: JSON.stringify(prodData)
+                });
+            }
+
+            if (res) {
+                showAlert(`Product ${editingProductKey ? 'updated' : 'saved'} successfully!`, "success");
+                loadDataFromServer(); // simple way to keep state in sync
+                document.getElementById("prodName").value = "";
+                document.getElementById("prodPrice").value = "";
+                document.getElementById("prodPieces").value = "";
+                document.getElementById("prodStock").value = "";
+                editingProductKey = null;
+            }
+        }
+
+        // Bill logic
+        function addBillItem() {
+            if (isBillSaved) {
+                showAlert("Bill already saved! Start a New Bill to add more items.", "warning");
+                return;
+            }
+            const productName = billProductSelect.value;
+            if (!productName || !products[productName]) {
+                showAlert("Please select a valid product.", "warning");
+                return;
+            }
+            let packetQty = parseInt(document.getElementById("packetQuantity").value) || 0;
+            let pieceQty = parseInt(document.getElementById("pieceQuantity").value) || 0;
+            if (packetQty === 0 && pieceQty === 0) {
+                showAlert("Add at least 1 packet or extra pieces.", "warning");
+                return;
+            }
+            const prod = products[productName];
+            const perPieceRate = prod.price / prod.pieces;
+            const total = (packetQty * prod.price) + (pieceQty * perPieceRate);
+
+            if (total <= 0) { showAlert("Invalid quantity.", "danger"); return; }
+            currentBillItems.push({
+                productKey: productName,
+                packetQty: packetQty,
+                pieceQty: pieceQty,
+                total: total,
+                unitPiecePrice: perPieceRate,
+                packetPrice: prod.price,
+                piecesPerPacket: prod.pieces
+            });
+            renderBillTable();
+            document.getElementById("packetQuantity").value = "";
+            document.getElementById("pieceQuantity").value = "";
+            document.getElementById("packetQuantity").disabled = false;
+            document.getElementById("pieceQuantity").disabled = false;
+            billProductSelect.value = "";
+            billProductSelect.focus(); // Auto-focus back to search for next item
+        }
+
+        function renderBillTable() {
+            if (currentBillItems.length === 0) {
+                billItemsBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">🛒 Cart is empty</td></tr>`;
+                grandTotalSpan.innerText = formatINR(0);
+                updateBillButtons();
+                return;
+            }
+            let html = "";
+            let grand = 0;
+            currentBillItems.forEach((item, idx) => {
+                grand += item.total;
+                let actionHtml = isBillSaved ? `<span style="color:#28a745; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-check"></i> Saved</span>` : `
+                            <button class="edit-bill-row" data-index="${idx}"><i class="fas fa-pen"></i></button>
+                            <button class="remove-bill-row" data-index="${idx}"><i class="fas fa-trash"></i></button>`;
+                html += `<tr>
+                        <td><strong>${escapeHtml(item.productKey)}</strong></td>
+                        <td>${formatINR(item.packetPrice)}</td>
+                        <td>${item.packetQty}</td>
+                        <td>${item.pieceQty}</td>
+                        <td>${formatINR(item.total)}</td>
+                        <td class="action-icons">
+                            ${actionHtml}
+                        </td>
+                     </tr>`;
+            });
+            billItemsBody.innerHTML = html;
+            grandTotalSpan.innerText = formatINR(grand);
+            updateBillButtons();
+            if (!isBillSaved) {
+                document.querySelectorAll(".edit-bill-row").forEach(btn => {
+                    btn.addEventListener("click", (e) => {
+                        const idx = parseInt(btn.getAttribute("data-index"));
+                        editBillRow(idx);
+                    });
+                });
+                document.querySelectorAll(".remove-bill-row").forEach(btn => {
+                    btn.addEventListener("click", (e) => {
+                        const idx = parseInt(btn.getAttribute("data-index"));
+                        currentBillItems.splice(idx, 1);
+                        renderBillTable();
+                    });
+                });
+            }
+        }
+
+        function updateBillButtons() {
+            const savBtn = document.getElementById("saveBillBtn");
+            const rstBtn = document.getElementById("resetBillBtn");
+            const editBtn = document.getElementById("editBillBtn");
+            const pdfBtn = document.getElementById("downloadPdfBtn");
+            const printBtn = document.getElementById("printBillBtn");
+            const waBtn = document.getElementById("whatsappShareBtn");
+            const hasItems = currentBillItems.length > 0;
+
+            // Save Bill: disabled when empty OR already saved
+            savBtn.disabled = !hasItems || isBillSaved;
+
+            // Visibility after save
+            if (editBtn) editBtn.style.display = isBillSaved ? "inline-flex" : "none";
+            if (pdfBtn) pdfBtn.style.display = isBillSaved ? "inline-flex" : "none";
+            if (printBtn) printBtn.style.display = isBillSaved ? "inline-flex" : "none";
+            if (waBtn) waBtn.style.display = isBillSaved ? "inline-flex" : "none";
+
+            // New Bill button pulse
+            if (isBillSaved) {
+                rstBtn.classList.add("new-bill-active");
+            } else {
+                rstBtn.classList.remove("new-bill-active");
+            }
+        }
+
+        function editBillRow(index) {
+            const item = currentBillItems[index];
+            if (!item) return;
+            // populate search input
+            billProductSelect.value = item.productKey;
+
+            const pktInput = document.getElementById("packetQuantity");
+            const pcInput = document.getElementById("pieceQuantity");
+
+            pktInput.value = item.packetQty || "";
+            pcInput.value = item.pieceQty || "";
+
+            if (item.packetQty > 0 && item.pieceQty === 0) {
+                pcInput.disabled = true;
+                pktInput.disabled = false;
+            } else if (item.pieceQty > 0 && item.packetQty === 0) {
+                pktInput.disabled = true;
+                pcInput.disabled = false;
+            } else {
+                pktInput.disabled = false;
+                pcInput.disabled = false;
+            }
+
+            currentBillItems.splice(index, 1);
+            renderBillTable();
+            showAlert("Edit mode active — adjust quantities and click Add again.", "edit");
+        }
+
+        function resetCurrentBill() {
+            if (currentBillItems.length > 0) {
+                showConfirm("Clear entire bill? All items will be removed.", "danger").then(ok => {
+                    if (ok) {
+                        currentBillItems = [];
+                        isBillSaved = false;
+                        document.getElementById("saveBillBtn").style.display = "inline-flex";
+                        document.getElementById("printBillBtn").style.display = "none";
+                        renderBillTable();
+                        customerNameInput.value = "";
+                    }
+                });
+            } else {
+                isBillSaved = false;
+                document.getElementById("saveBillBtn").style.display = "inline-flex";
+                document.getElementById("printBillBtn").style.display = "none";
+                customerNameInput.value = "";
+            }
+        }
+
+        async function saveBillHandler() {
+            if (currentBillItems.length === 0) {
+                showAlert("Cart is empty. Add some items first.", "warning");
+                return;
+            }
+            if (isBillSaved) return;
+
+            const custName = customerNameInput.value.trim() || "Walk-in Customer";
+
+            // 1. Find or Create Customer
+            let customerId = null;
+            const customers = await fetchWithAuth('/customers');
+            if (customers) {
+                const existing = customers.find(c => c.name.toLowerCase() === custName.toLowerCase());
+                if (existing) {
+                    customerId = existing._id;
+                } else {
+                    const newCust = await fetchWithAuth('/customers', {
+                        method: 'POST',
+                        body: JSON.stringify({ name: custName })
+                    });
+                    if (newCust) customerId = newCust._id;
+                }
+            }
+
+            if (!customerId) return;
+
+            // 2. Prepare Invoice
+            const invNo = document.getElementById("invoiceNoDisplay").value || getNextInvoiceNo();
+            const payStatus = document.getElementById("paymentStatus").value.toLowerCase(); // 'paid' or 'pending'
+
+            const invoiceData = {
+                invoiceNumber: invNo,
+                customer: customerId,
+                status: payStatus === 'paid' ? 'paid' : 'pending',
+                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // +7 days
+                items: currentBillItems.map(it => {
+                    const prod = products[it.productKey];
+                    return {
+                        product: prod._id,
+                        description: it.productKey,
+                        quantity: it.packetQty + (it.pieceQty / it.piecesPerPacket),
+                        rate: it.packetPrice
+                    };
+                })
+            };
+
+            // 3. Save Invoice
+            const res = await fetchWithAuth('/invoices', {
+                method: 'POST',
+                body: JSON.stringify(invoiceData)
+            });
+
+            if (res) {
+                isBillSaved = true;
+                document.getElementById("saveBillBtn").style.display = "none";
+                document.getElementById("downloadPdfBtn").style.display = "inline-flex";
+                document.getElementById("whatsappShareBtn").style.display = "inline-flex";
+
+                showAlert(`Bill #${invNo} saved to database!`, "success");
+                loadDataFromServer(); // Refresh all state
+                renderBillTable();
+            }
+        }
+
+        function editBillHandler() {
+            if (!isBillSaved) return;
+            if (currentBillItems.length === 0) return;
+
+            showConfirm("Unlock this bill for editing? This will restore the deducted stock until you save again.", "warning").then(ok => {
+                if (ok) {
+                    // Restore stock
+                    let stockUpdated = false;
+                    for (let it of currentBillItems) {
+                        if (products[it.productKey]) {
+                            let currentStock = products[it.productKey].stock || 0;
+                            let packetsToRestore = it.packetQty + (it.pieceQty / it.piecesPerPacket);
+                            products[it.productKey].stock = currentStock + packetsToRestore;
+                            stockUpdated = true;
+                        }
+                    }
+                    if (stockUpdated) {
+                        persistProducts();
+                        renderProducts();
+                    }
+
+                    // Remove from sales history
+                    sales.pop();
+                    localStorage.setItem(salesKey, JSON.stringify(sales));
+                    calculateReports();
+
+                    isBillSaved = false;
+                    document.getElementById("saveBillBtn").style.display = "inline-flex";
+                    renderBillTable(); // Show edit/remove buttons again
+                    showAlert("Bill unlocked! Stock has been restored temporarily.", "edit");
+                }
+            });
+        }
+
+        // Helper to get unified bill data
+        function getBillData(saleData = null) {
+            if (saleData) return saleData;
+
+            return {
+                shopName: "SmartBilling",
+                title: "INVOICE",
+                customer: customerNameInput.value.trim() || "Walk-in Customer",
+                date: billDateDisplay.value,
+                items: currentBillItems.map(it => ({
+                    name: it.productKey,
+                    packetQty: it.packetQty,
+                    pieceQty: it.pieceQty,
+                    packetPrice: it.packetPrice,
+                    total: it.total,
+                    piecesPerPacket: it.piecesPerPacket
+                })),
+                totalSum: currentBillItems.reduce((sum, it) => sum + it.total, 0)
+            };
+        }
+
+        function generateBillHtml(saleDataInput) {
+            const data = getBillData(saleDataInput);
+            let itemsHtml = "";
+
+            for (let it of data.items) {
+                const qtyStr = `${it.packetQty}p + ${it.pieceQty}`;
+                itemsHtml += `<tr style="border-bottom:1px solid #f0f4f7;">
+                            <td style="padding:10px 8px; font-weight:600; color:#1a3b4f;">${escapeHtml(it.name)}</td>
+                            <td style="padding:10px 8px; text-align:center;">${formatINR(it.packetPrice)}</td>
+                            <td style="padding:10px 8px; text-align:center;">${qtyStr}</td>
+                            <td style="padding:10px 8px; text-align:right; font-weight:700; color:#1f6e8c;">${formatINR(it.total)}</td>
+                          </tr>`;
+            }
+            return `
+            <div id="thermalBill" style="font-family:'Inter', sans-serif; max-width:400px; margin:0 auto; padding:30px; background:white; color:#1a3b4f; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.05);">
+                <div style="text-align:center; margin-bottom:20px;">
+                    <h1 style="margin:0; font-size:1.8rem; color:#1f6e8c;">${data.shopName}</h1>
+                    <p style="margin:4px 0 0; font-size:0.8rem; letter-spacing:2px; font-weight:700; color:#6e8f9c;">${data.title}</p>
+                </div>
+                
+                <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-size:0.85rem; border-top:1px solid #eef3f6; border-bottom:1px solid #eef3f6; padding:12px 0;">
+                    <div>
+                        <span style="color:#6e8f9c; display:block; text-transform:uppercase; font-size:0.7rem; font-weight:700;">Bill To</span>
+                        <strong style="font-size:1rem;">${escapeHtml(data.customer)}</strong>
+                    </div>
+                    <div style="text-align:right;">
+                        <span style="color:#6e8f9c; display:block; text-transform:uppercase; font-size:0.7rem; font-weight:700;">Date</span>
+                        <strong>${data.date}</strong>
+                    </div>
+                </div>
+
+                <table style="width:100%; border-collapse:collapse; font-size:0.85rem; margin-bottom:15px;">
+                  <thead>
+                    <tr style="border-bottom:2px solid #1f6e8c; color:#1f6e8c;">
+                        <th style="padding:8px; text-align:left; font-weight:700;">Item</th>
+                        <th style="padding:8px; text-align:center; font-weight:700;">Price</th>
+                        <th style="padding:8px; text-align:center; font-weight:700;">Qty</th>
+                        <th style="padding:8px; text-align:right; font-weight:700;">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${itemsHtml}
+                  </tbody>
+                </table>
+
+                <div style="margin-top:20px; padding-top:15px; border-top:2px solid #eef3f6; text-align:right;">
+                    <span style="color:#6e8f9c; font-weight:700; font-size:0.8rem;">GRAND TOTAL</span>
+                    <h2 style="margin:0; font-size:1.6rem; color:#1f6e8c;">${formatINR(data.totalSum)}</h2>
+                </div>
+
+                <div style="margin-top:30px; text-align:center; border-top:1px dashed #cde3ec; padding-top:15px;">
+                    <p style="font-size:0.8rem; font-style:italic; color:#7f9fab; margin:0;">✨ Thank you for choosing SmartBilling! ✨</p>
+                    <p style="font-size:0.65rem; color:#b2cfdf; margin-top:5px;">Professional Management Suite</p>
+                </div>
+            </div>
+            `;
+        }
+
+        function printBillHandler() {
+            if (currentBillItems.length === 0) {
+                showAlert("No items to print.", "warning");
+                return;
+            }
+            const printSection = document.getElementById("printBillSection");
+            printSection.style.display = "block";
+            printSection.innerHTML = generateBillHtml();
+            window.print();
+            printSection.style.display = "none";
+        }
+
+        function downloadPdfHandler() {
+            if (currentBillItems.length === 0) {
+                showAlert("Add some items to the bill first.", "warning");
+                return;
+            }
+
+            const data = getBillData();
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // --- HEADER SECTION ---
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            doc.setTextColor(31, 110, 140);
+            doc.text(data.shopName, 105, 20, { align: "center" });
+
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(110, 143, 156);
+            doc.text("Premium Wholesale Management Suite", 105, 26, { align: "center" });
+
+            doc.setDrawColor(230, 240, 245);
+            doc.line(20, 32, 190, 32);
+
+            doc.setFontSize(18);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(26, 59, 79);
+            doc.text(data.title, 105, 45, { align: "center" });
+
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Bill To: ${data.customer}`, 20, 60);
+            doc.text(`Date: ${data.date}`, 190, 60, { align: "right" });
+
+            const tableRows = data.items.map(it => [
+                it.name,
+                `${it.packetQty}p + ${it.pieceQty} (PC: ${it.piecesPerPacket})`,
+                `Rs. ${it.packetPrice.toFixed(2)}`,
+                `Rs. ${it.total.toFixed(2)}`
+            ]);
+
+            doc.autoTable({
+                startY: 70,
+                head: [['Item Name', 'Quantity (Pkt + Pcs)', 'Sell Price', 'Total Amount']],
+                body: tableRows,
+                theme: 'striped',
+                headStyles: { fillColor: [31, 110, 140], textColor: [255, 255, 255], halign: 'center' },
+                bodyStyles: { textColor: [26, 59, 79], halign: 'center' },
+                columnStyles: { 0: { halign: 'left', fontStyle: 'bold' }, 3: { halign: 'right' } },
+                margin: { left: 20, right: 20 }
+            });
+
+            let finalY = doc.lastAutoTable.finalY + 15;
+            doc.setDrawColor(31, 110, 140);
+            doc.line(120, finalY - 5, 190, finalY - 5);
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text(`GRAND TOTAL:`, 120, finalY);
+            doc.text(`Rs. ${data.totalSum.toFixed(2)}`, 190, finalY, { align: "right" });
+
+            finalY += 30;
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "italic");
+            doc.setTextColor(110, 143, 156);
+            doc.text("Thank you for your business! This is a computer generated invoice.", 105, finalY, { align: "center" });
+
+            doc.save(`Invoice_${data.customer.replace(/\s+/g, '_')}_${new Date().getTime()}.pdf`);
+        }
+
+        function shareWhatsAppHandler() {
+            if (currentBillItems.length === 0) return;
+            
+            // First trigger PDF download
+            downloadPdfHandler();
+
+            const data = getBillData();
+            let message = `*🏪 ${data.shopName}*\n`;
+            message += `*_${data.title}_*\n\n`;
+            message += `*Customer:* ${data.customer}\n`;
+            message += `*Date:* ${data.date}\n`;
+            message += `----------------------------\n`;
+
+            for (let it of data.items) {
+                message += `• *${it.name}*\n`;
+                message += `  ${it.packetQty}p + ${it.pieceQty} @ ₹${it.packetPrice.toFixed(2)} = *₹${it.total.toFixed(2)}*\n`;
+            }
+
+            message += `----------------------------\n`;
+            message += `*Grand Total: ₹${data.totalSum.toFixed(2)}*\n\n`;
+            message += `✨ Thank you for choosing SmartBilling! ✨`;
+
+            const encodedMsg = encodeURIComponent(message);
+            window.open(`https://wa.me/?text=${encodedMsg}`, '_blank');
+        }
+
+        function showPage(pageId) {
+            const productDiv = document.getElementById("productPanel");
+            const billDiv = document.getElementById("billPanel");
+            const reportDiv = document.getElementById("reportPanel");
+            const purchaseDiv = document.getElementById("purchasePanel");
+
+            productDiv.classList.add("hidden-page");
+            billDiv.classList.add("hidden-page");
+            reportDiv.classList.add("hidden-page");
+            purchaseDiv.classList.add("hidden-page");
+
+            if (pageId === 'product') {
+                productDiv.classList.remove("hidden-page");
+            } else if (pageId === 'purchase') {
+                purchaseDiv.classList.remove("hidden-page");
+                renderPurchases();
+            } else if (pageId === 'bill') {
+                billDiv.classList.remove("hidden-page");
+                renderProducts();  // refresh dropdown
+                if (!isBillSaved) {
+                    document.getElementById("invoiceNoDisplay").value = getNextInvoiceNo();
+                }
+            } else if (pageId === 'report') {
+                reportDiv.classList.remove("hidden-page");
+                calculateReports();
+            }
+
+            document.querySelectorAll(".nav-btn").forEach(btn => {
+                btn.classList.remove("active");
+                if (btn.getAttribute("data-page") === pageId) {
+                    btn.classList.add("active");
+                }
+            });
+        }
+
+        function calculateReports() {
+            const now = new Date();
+            const todayStr = now.toDateString();
+
+            const yesterday = new Date();
+            yesterday.setDate(now.getDate() - 1);
+            const yesterdayStr = yesterday.toDateString();
+
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            let todayTotal = 0;
+            let yesterdayTotal = 0;
+            let monthlyTotal = 0;
+            let productStats = {}; // { productName: totalQty }
+
+            let todayCount = 0;
+            let monthlyCount = 0;
+
+            sales.forEach(sale => {
+                const saleDate = new Date(sale.date);
+                const saleDateStr = saleDate.toDateString();
+
+                // Totals
+                if (saleDateStr === todayStr) {
+                    todayTotal += sale.total;
+                    todayCount++;
+                }
+                if (saleDateStr === yesterdayStr) yesterdayTotal += sale.total;
+                if (saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear) {
+                    monthlyTotal += sale.total;
+                    monthlyCount++;
+                }
+
+                // Top product tracking
+                if (sale.items) {
+                    sale.items.forEach(item => {
+                        const q = item.qty !== undefined ? item.qty : (item.packetQty + (item.pieceQty / (item.piecesPerPacket || 1)));
+                        productStats[item.name] = (productStats[item.name] || 0) + q;
+                    });
+                }
+            });
+
+            // Find top selling product
+            let topProd = "--";
+            let topQty = 0;
+            for (let name in productStats) {
+                if (productStats[name] > topQty) {
+                    topQty = productStats[name];
+                    topProd = name;
+                }
+            }
+
+            // Update UI
+            document.getElementById("todaySaleVal").innerHTML = `${formatINR(todayTotal)} <small style="display:block; font-size:0.7rem; opacity:0.8; font-weight:normal;">Bills: ${todayCount}</small>`;
+            document.getElementById("yesterdaySaleVal").innerText = formatINR(yesterdayTotal);
+            document.getElementById("monthlySaleVal").innerHTML = `${formatINR(monthlyTotal)} <small style="display:block; font-size:0.7rem; opacity:0.8; font-weight:normal;">Bills: ${monthlyCount}</small>`;
+            document.getElementById("topProductVal").innerText = topProd;
+            document.getElementById("topProductQty").innerText = topQty > 0 ? `Sold: ${topQty.toFixed(2)} units` : "";
+
+            renderBillHistory();
+        }
+
+        function renderBillHistory() {
+            const historyBody = document.getElementById("billHistoryBody");
+            const filterInput = document.getElementById("historyDateFilter");
+            const globalSearchInput = document.getElementById("globalSearch");
+            const clearBtn = document.getElementById("clearHistoryFilter");
+            const filterVal = filterInput.value;
+            const searchVal = globalSearchInput.value.toLowerCase().trim();
+
+            if (filterVal) clearBtn.classList.add("active");
+            else clearBtn.classList.remove("active");
+
+            let filteredSales = sales.filter(sale => {
+                let matchDate = true;
+                if (filterVal) {
+                    const saleDate = new Date(sale.date).toISOString().split('T')[0];
+                    matchDate = (saleDate === filterVal);
+                }
+
+                let matchSearch = true;
+                if (searchVal) {
+                    const inItems = sale.items.some(it => it.name.toLowerCase().includes(searchVal));
+                    matchSearch = sale.customer.toLowerCase().includes(searchVal) ||
+                        (sale.invoiceNo && sale.invoiceNo.toLowerCase().includes(searchVal)) ||
+                        inItems;
+                }
+
+                return matchDate && matchSearch;
+            });
+
+            if (!filteredSales || filteredSales.length === 0) {
+                historyBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px; color: #6e8f9c;">📝 No bills found.</td></tr>`;
+                return;
+            }
+
+            let html = "";
+            const displaySales = [...filteredSales].reverse();
+            displaySales.forEach((sale) => {
+                const originalIdx = sales.findIndex(s => s.date === sale.date && s.invoiceNo === sale.invoiceNo);
+                const dateObj = new Date(sale.date);
+                const dateStr = dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+                const timeStr = dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+                const statusCls = sale.paymentStatus === 'Unpaid' ? 'background:#fff3e0; color:#f57c00; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:700;' : 'background:#e6f9ee; color:#28a745; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:700;';
+
+                html += `
+                    <tr>
+                        <td style="font-weight:700; color:#2c8fb0;">#${sale.invoiceNo || '----'}</td>
+                        <td><div style="font-weight:700; color:#1a3b4f;">${escapeHtml(sale.customer)}</div></td>
+                        <td style="font-size:0.75rem; color:#6e8f9c;">${dateStr}, ${timeStr}</td>
+                        <td style="font-weight:700; color:#1f6e8c;">${formatINR(sale.total)}</td>
+                        <td><span style="${statusCls} cursor:pointer;" onclick="togglePaymentStatus(${originalIdx})" title="Toggle Payment Status">${sale.paymentStatus || 'Paid'}</span></td>
+                        <td class="action-icons">
+                            <button onclick="viewBillDetails(${originalIdx})" title="View Details"><i class="fas fa-eye"></i></button>
+                            <button onclick="togglePaymentStatus(${originalIdx})" title="Change Status" style="color:#f39c12;"><i class="fas fa-sync-alt"></i></button>
+                            <button onclick="loadBillToCart(${originalIdx})" title="Repeat Bill" style="color:#2c8fb0;"><i class="fas fa-redo"></i></button>
+                            <button onclick="downloadSaleEntry(${originalIdx})" title="Download Bill" style="color:#28a745;"><i class="fas fa-download"></i></button>
+                            <button onclick="deleteSaleEntry(${originalIdx})" title="Delete" style="color:#d32f2f;"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            historyBody.innerHTML = html;
+        }
+
+        function viewBillDetails(index) {
+            const sale = sales[index];
+            if (!sale) return;
+
+            const dateStr = new Date(sale.date).toLocaleString('en-IN');
+            let itemsHtml = `
+                <div style="text-align:left; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                    <div style="font-size:0.8rem; color:#6e8f9c; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Customer</div>
+                    <div style="font-size:1.1rem; font-weight:700; color:#1a3b4f;">${escapeHtml(sale.customer)}</div>
+                    <div style="font-size:0.8rem; color:#6e8f9c; margin-top:5px;">${dateStr}</div>
+                </div>
+                <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                    <thead>
+                        <tr style="border-bottom:2px solid #eef3f8; color:#1f6e8c;">
+                            <th style="padding:8px 0; text-align:left;">Item</th>
+                            <th style="padding:8px 0; text-align:center;">Qty</th>
+                            <th style="padding:8px 0; text-align:right;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            sale.items.forEach(it => {
+                const qtyStr = it.packetQty !== undefined ? `${it.packetQty}p + ${it.pieceQty}` : `${it.qty.toFixed(2)} units`;
+                itemsHtml += `
+                    <tr style="border-bottom:1px solid #f5f9fc;">
+                        <td style="padding:10px 0;">${escapeHtml(it.name)}</td>
+                        <td style="padding:10px 0; text-align:center;">${qtyStr}</td>
+                        <td style="padding:10px 0; text-align:right;">${formatINR(it.total || it.amount)}</td>
+                    </tr>`;
+            });
+
+            itemsHtml += `
+                    </tbody>
+                </table>
+                <div style="margin-top:15px; text-align:right;">
+                    <div style="font-size:0.8rem; color:#6e8f9c; font-weight:600;">GRAND TOTAL</div>
+                    <div style="font-size:1.4rem; font-weight:800; color:#1f6e8c;">${formatINR(sale.total)}</div>
+                </div>`;
+
+            // Use the _openModal helper
+            _openModal("info", "fas fa-file-invoice", "Bill Details", "", [], false);
+            // Inject the custom HTML into modalMsg
+            document.getElementById("modalMsg").innerHTML = itemsHtml;
+            // Add a close button
+            const closeBtn = document.createElement("button");
+            closeBtn.className = "modal-btn primary";
+            closeBtn.style.marginTop = "15px";
+            closeBtn.style.width = "100%";
+            closeBtn.textContent = "Close Details";
+            closeBtn.onclick = _closeModal;
+            document.getElementById("modalActions").appendChild(closeBtn);
+        }
+
+        function downloadSaleEntry(index) {
+            const sale = sales[index];
+            if (!sale) return;
+            const printSection = document.getElementById("printBillSection");
+            printSection.style.display = "block";
+            printSection.innerHTML = generateBillHtml(sale);
+
+            const opt = {
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename: 'Invoice_' + (sale.invoiceNo || 'Sale') + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(printSection).save().then(() => {
+                printSection.style.display = "none";
+            });
+        }
+
+        async function togglePaymentStatus(index) {
+            const sale = sales[index];
+            if (!sale) return;
+
+            const newStatus = (sale.paymentStatus === "Unpaid") ? "paid" : "pending";
+
+            const res = await fetchWithAuth(`/invoices/${sale._id}`, {
+                method: 'PUT',
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (res) {
+                showAlert(`Payment status updated to ${newStatus}.`, "success");
+                loadDataFromServer();
+            }
+        }
+
+        async function deleteSaleEntry(index) {
+            const sale = sales[index];
+            if (!sale) return;
+
+            showConfirm("Delete this bill from history permanently?", "danger").then(async ok => {
+                if (ok) {
+                    const res = await fetchWithAuth(`/invoices/${sale._id}`, { method: 'DELETE' });
+                    if (res) {
+                        showAlert("Bill record deleted.", "success");
+                        loadDataFromServer();
+                    }
+                }
+            });
+        }
+
+        function setDates() {
+            const today = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+            document.getElementById("headerDate").innerText = today;
+            billDateDisplay.value = today;
+        }
+
+        function initProfile() {
+            const userName = localStorage.getItem("prostock_username") || "Admin";
+            document.getElementById("profileNameDisplay").textContent = userName;
+        }
+
+        function loadBillToCart(index) {
+            const sale = sales[index];
+            if (!sale) return;
+
+            showConfirm(`Load items from Bill #${sale.invoiceNo} into current cart? This will clear any existing items.`, "info").then(ok => {
+                if (ok) {
+                    currentBillItems = sale.items.map(it => {
+                        // Backend items use .product (ID) and .name (from helper conversion)
+                        // In loadDataFromServer, we convert backend to frontend format.
+                        // However, 'sale.items' might have different keys depending on how it's handled.
+                        // Let's assume the conversion in loadDataFromServer is robust.
+                        return {
+                            productKey: it.name,
+                            packetQty: it.packetQty || it.quantity,
+                            pieceQty: it.pieceQty || 0,
+                            total: it.total,
+                            packetPrice: it.packetPrice || it.rate,
+                            piecesPerPacket: it.piecesPerPacket || 1
+                        };
+                    });
+                    customerNameInput.value = sale.customer;
+                    isBillSaved = false;
+                    showPage('bill');
+                    renderBillTable();
+                    showAlert("Old bill items loaded. You can now edit or save as a new bill.", "success");
+                }
+            });
+        }
+
+        function exportToCSV() {
+            if (sales.length === 0) {
+                showAlert("No sales data to export.", "warning");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Invoice #,Customer,Date,Total,Status,Items\n";
+
+            sales.forEach(s => {
+                const itemsStr = s.items.map(it => `${it.name}(${it.packetQty}p+${it.pieceQty})`).join("; ");
+                const row = [
+                    s.invoiceNo,
+                    `"${s.customer}"`,
+                    new Date(s.date).toLocaleString(),
+                    s.total.toFixed(2),
+                    s.paymentStatus || "Paid",
+                    `"${itemsStr}"`
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `SmartBilling_Sales_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", function () {
+            showConfirm("Are you sure you want to logout?", "danger").then(ok => {
+                if (ok) {
+                    localStorage.removeItem("prostock_username");
+                    localStorage.removeItem("prostock_userid");
+                    window.location.href = "login.html";
+                }
+            });
+        });
+
+        // Event listeners
+        document.getElementById("saveProductBtn").addEventListener("click", saveProduct);
+        document.getElementById("addToBillBtn").addEventListener("click", addBillItem);
+        document.getElementById("saveBillBtn").addEventListener("click", saveBillHandler);
+        document.getElementById("editBillBtn").addEventListener("click", editBillHandler);
+        document.getElementById("downloadPdfBtn").addEventListener("click", downloadPdfHandler);
+        document.getElementById("printBillBtn").addEventListener("click", printBillHandler);
+        document.getElementById("whatsappShareBtn").addEventListener("click", shareWhatsAppHandler);
+        document.getElementById("resetBillBtn").addEventListener("click", resetCurrentBill);
+
+        document.getElementById("addMiscStockBtn").addEventListener("click", () => {
+            const qty = prompt("Enter quantity (packets) to add to current stock:");
+            if (qty && !isNaN(qty) && parseFloat(qty) > 0) {
+                let current = parseFloat(document.getElementById("prodStock").value) || 0;
+                document.getElementById("prodStock").value = current + parseFloat(qty);
+            }
+        });
+
+        document.getElementById("purProdName").addEventListener("change", function () {
+            const p = products[this.value];
+            if (p) {
+                document.getElementById("purPieces").value = p.pieces || "";
+                document.getElementById("purPrice").focus();
+            }
+        });
+
+        // Purchase Logic
+        function addPurchaseItemToCart() {
+            const prodName = document.getElementById("purProdName").value.trim();
+            const qty = parseFloat(document.getElementById("purQty").value) || 0;
+            const price = parseFloat(document.getElementById("purPrice").value) || 0;
+            const pieces = parseInt(document.getElementById("purPieces").value) || 0;
+
+            if (!prodName || qty < 0 || price < 0) {
+                showAlert("Please select a product and provide valid quantity and price.", "warning");
+                return;
+            }
+
+            if (qty === 0) {
+                showAlert("Quantity cannot be 0.", "warning");
+                return;
+            }
+
+            if (!products[prodName]) {
+                showAlert("Please select an existing product from the dropdown.", "warning");
+                return;
+            }
+
+            const total = qty * price;
+
+            currentPurchaseItems.push({
+                product: prodName,
+                qty: qty,
+                price: price,
+                pieces: pieces,
+                total: total
+            });
+
+            renderPurchaseCart();
+
+            // Clear inputs
+            document.getElementById("purProdName").value = "";
+            document.getElementById("purQty").value = "";
+            document.getElementById("purPrice").value = "";
+            document.getElementById("purPieces").value = "";
+        }
+
+        function renderPurchaseCart() {
+            const body = document.getElementById("purchaseCartBody");
+            const gtSpan = document.getElementById("purchaseGrandTotal");
+
+            if (currentPurchaseItems.length === 0) {
+                body.innerHTML = `<tr><td colspan="6" style="text-align:center;">🛒 Cart is empty</td></tr>`;
+                gtSpan.innerText = formatINR(0);
+                return;
+            }
+
+            let html = "";
+            let grandTotal = 0;
+            currentPurchaseItems.forEach((item, index) => {
+                grandTotal += item.total;
+                html += `<tr>
+                    <td><strong>${escapeHtml(item.product)}</strong></td>
+                    <td>${formatINR(item.price)}</td>
+                    <td>${item.qty}</td>
+                    <td>${item.pieces || '-'}</td>
+                    <td style="text-align:right; font-weight:700; color:#1f6e8c;">${formatINR(item.total)}</td>
+                    <td class="action-icons" style="text-align:center;">
+                        <button onclick="removePurchaseCartItem(${index})" title="Remove"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>`;
+            });
+            body.innerHTML = html;
+            gtSpan.innerText = formatINR(grandTotal);
+        }
+
+        function removePurchaseCartItem(index) {
+            currentPurchaseItems.splice(index, 1);
+            renderPurchaseCart();
+        }
+
+        async function savePurchaseBill() {
+            if (currentPurchaseItems.length === 0) {
+                showAlert("Purchase cart is empty. Add items first.", "warning");
+                return;
+            }
+
+            const supplier = document.getElementById("purSupplier").value.trim() || "—";
+            const billTotal = currentPurchaseItems.reduce((sum, it) => sum + it.total, 0);
+
+            const purchaseData = {
+                supplierName: supplier,
+                total: billTotal,
+                items: currentPurchaseItems.map(item => ({
+                    name: item.product,
+                    price: item.price,
+                    packetQty: item.qty,
+                    piecesPerPacket: item.pieces,
+                    total: item.total
+                }))
+            };
+
+            const res = await fetchWithAuth('/purchases', {
+                method: 'POST',
+                body: JSON.stringify(purchaseData)
+            });
+
+            if (res) {
+                currentPurchaseItems = [];
+                document.getElementById("purSupplier").value = "";
+                showAlert(`Purchase Bill Saved successfully! Stock updated.`, "success");
+                await loadDataFromServer();
+                renderPurchaseCart();
+                renderPurchases();
+            }
+        }
+
+        async function deletePurchase(index) {
+            const pur = purchases[index];
+            if (!pur) return;
+
+            showConfirm("Are you sure you want to delete this purchase? Stock will be deducted accordingly.", "danger").then(async ok => {
+                if (ok) {
+                    const res = await fetchWithAuth(`/purchases/${pur._id}`, { method: 'DELETE' });
+                    if (res) {
+                        showAlert("Purchase deleted and stock updated.", "success");
+                        await loadDataFromServer();
+                        renderPurchases();
+                    }
+                }
+            });
+        }
+
+        function renderPurchases() {
+            const body = document.getElementById("purchaseHistoryBody");
+            if (!purchases || purchases.length === 0) {
+                body.innerHTML = `<tr><td colspan="8" style="text-align:center;">📦 No purchase records found.</td></tr>`;
+                return;
+            }
+
+            let html = "";
+            [...purchases].reverse().forEach((p, revIndex) => {
+                const index = purchases.length - 1 - revIndex;
+                const dateObj = new Date(p.date || p.createdAt);
+                const dateStr = dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+
+                p.items.forEach((it, itIdx) => {
+                    html += `<tr>
+                        <td style="font-size:0.75rem; color:#6e8f9c;">${itIdx === 0 ? dateStr : ""}</td>
+                        <td><strong>${itIdx === 0 ? escapeHtml(p.supplierName || '—') : ""}</strong></td>
+                        <td>${escapeHtml(it.name)}</td>
+                        <td>${formatINR(it.price)}</td>
+                        <td>${it.packetQty}</td>
+                        <td>${it.piecesPerPacket}</td>
+                        <td style="text-align:right; font-weight:700; color:#1f6e8c;">${formatINR(it.total)}</td>
+                        <td class="action-icons" style="text-align:center;">
+                            ${itIdx === 0 ? `
+                                <button class="delete-pur-btn" data-index="${index}" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                            ` : ""}
+                        </td>
+                    </tr>`;
+                });
+            });
+            body.innerHTML = html;
+
+            document.querySelectorAll(".delete-pur-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const idx = parseInt(btn.getAttribute("data-index"));
+                    deletePurchase(idx);
+                });
+            });
+        }
+
+        document.getElementById("addPurchaseItemBtn").addEventListener("click", addPurchaseItemToCart);
+        document.getElementById("savePurchaseBillBtn").addEventListener("click", savePurchaseBill);
+
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                showPage(btn.getAttribute("data-page"));
+            });
+        });
+
+        // Initialize app
+        function init() {
+            initProfile();
+            setDates();
+            renderProducts();
+            renderBillTable();
+            calculateReports();
+            showPage('product');
+            document.getElementById("packetQuantity").value = "";
+            document.getElementById("pieceQuantity").value = "";
+            billProductSelect.value = "";
+
+            // Custom dropdown filter logic
+            const productSearchInput = document.getElementById("billProductSelect");
+            const productListMenu = document.getElementById("billProductList");
+
+            function filterDropdown() {
+                const filter = productSearchInput.value.toLowerCase();
+                const items = productListMenu.querySelectorAll(".dropdown-item");
+                let hasVisible = false;
+                items.forEach(item => {
+                    if (item.getAttribute("data-value").toLowerCase().includes(filter)) {
+                        item.style.display = "block";
+                        hasVisible = true;
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+                if (hasVisible && Object.keys(products).length > 0) productListMenu.classList.remove("hidden");
+                else productListMenu.classList.add("hidden");
+            }
+
+            productSearchInput.addEventListener("focus", filterDropdown);
+            productSearchInput.addEventListener("input", filterDropdown);
+
+            // Fast Billing: Enter key logic
+            productSearchInput.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    const visibleItems = productListMenu.querySelectorAll(".dropdown-item:not([style*='display: none'])");
+                    if (visibleItems.length > 0) {
+                        // Auto-select first visible item
+                        const firstItem = visibleItems[0];
+                        productSearchInput.value = firstItem.getAttribute("data-value");
+                        productListMenu.classList.add("hidden");
+                        // Focus packets qty
+                        document.getElementById("packetQuantity").focus();
+                        document.getElementById("packetQuantity").select();
+                    }
+                }
+            });
+
+            const pktInput = document.getElementById("packetQuantity");
+            const pcInput = document.getElementById("pieceQuantity");
+
+            pktInput.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    if (pcInput.value === "0" || pcInput.value === "") {
+                        addBillItem();
+                    } else {
+                        pcInput.focus();
+                        pcInput.select();
+                    }
+                }
+            });
+
+            pcInput.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    addBillItem();
+                }
+            });
+
+            document.getElementById("historyDateFilter").addEventListener("change", renderBillHistory);
+            document.getElementById("globalSearch").addEventListener("input", renderBillHistory);
+            document.getElementById("exportExcelBtn").addEventListener("click", exportToCSV);
+
+            document.getElementById("clearHistoryFilter").addEventListener("click", () => {
+                document.getElementById("historyDateFilter").value = "";
+                renderBillHistory();
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!productSearchInput.contains(e.target) && !productListMenu.contains(e.target)) {
+                    productListMenu.classList.add("hidden");
+                }
+                const purInput = document.getElementById("purProdName");
+                const purList = document.getElementById("purProductList");
+                if (purInput && purList && !purInput.contains(e.target) && !purList.contains(e.target)) {
+                    purList.classList.add("hidden");
+                }
+            });
+
+            // Purchase dropdown filter
+            const purProdInput = document.getElementById("purProdName");
+            const purProdList = document.getElementById("purProductList");
+            if (purProdInput && purProdList) {
+                function filterPurDropdown() {
+                    const filter = purProdInput.value.toLowerCase();
+                    const items = purProdList.querySelectorAll(".dropdown-item");
+                    let hasVisible = false;
+                    items.forEach(item => {
+                        if (item.getAttribute("data-value").toLowerCase().includes(filter)) {
+                            item.style.display = "block";
+                            hasVisible = true;
+                        } else {
+                            item.style.display = "none";
+                        }
+                    });
+                    if (hasVisible && Object.keys(products).length > 0) purProdList.classList.remove("hidden");
+                    else purProdList.classList.add("hidden");
+                }
+                purProdInput.addEventListener("focus", filterPurDropdown);
+                purProdInput.addEventListener("input", filterPurDropdown);
+            }
+        }
+        init();
+    </script>
+</body>
+
+</html>
