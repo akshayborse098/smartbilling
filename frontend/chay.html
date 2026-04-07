@@ -1281,11 +1281,10 @@
     </div>
 
     <script>
-        const productsKey = "products";
         let products = {};
 
         function persistProducts() {
-            localStorage.setItem(productsKey, JSON.stringify(products));
+            localStorage.setItem("products", JSON.stringify(products));
         }
 
 
