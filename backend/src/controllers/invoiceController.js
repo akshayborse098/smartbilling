@@ -88,7 +88,17 @@ export const getInvoiceById = async (req, res) => {
 
 export const updateInvoice = async (req, res) => {
   try {
+    const { id } = req.params;
     const payload = { ...req.body };
+
+    const existingInvoice = await Invoice.findOne({
+      _id: id,
+      createdBy: req.user._id,
+    });
+
+    if (!existingInvoice) {
+      return res.status(404).json({ message: "Invoice not found" });
+    }
 
     if (payload.customer) {
       const customerExists = await Customer.findOne({
@@ -100,32 +110,45 @@ export const updateInvoice = async (req, res) => {
       }
     }
 
-    if (payload.items || payload.taxPercent !== undefined) {
-      const existingInvoice = await Invoice.findOne({
-        _id: req.params.id,
-        createdBy: req.user._id,
-      });
-      if (!existingInvoice) {
-        return res.status(404).json({ message: "Invoice not found" });
+    // Handle stock adjustments if items are updated
+    if (payload.items) {
+      // 1. Restore stock from old items
+      for (const item of existingInvoice.items) {
+        if (item.product) {
+          await Product.findOneAndUpdate(
+            { _id: item.product, createdBy: req.user._id },
+            { $inc: { stock: item.quantity } }
+          );
+        }
       }
 
-      const items = payload.items || existingInvoice.items;
+      // 2. Deduct stock from new items
+      for (const item of payload.items) {
+        if (item.product) {
+          await Product.findOneAndUpdate(
+            { _id: item.product, createdBy: req.user._id },
+            { $inc: { stock: -item.quantity } }
+          );
+        }
+      }
+
       const taxPercent = payload.taxPercent ?? existingInvoice.taxPercent;
-      payload.total = calculateTotal(items, taxPercent);
+      payload.total = calculateTotal(payload.items, taxPercent);
+    } else if (payload.taxPercent !== undefined) {
+      payload.total = calculateTotal(existingInvoice.items, payload.taxPercent);
     }
 
     const invoice = await Invoice.findOneAndUpdate(
-      { _id: req.params.id, createdBy: req.user._id },
+      { _id: id, createdBy: req.user._id },
       payload,
       { new: true, runValidators: true }
-    );
-
-    if (!invoice) {
-      return res.status(404).json({ message: "Invoice not found" });
-    }
+    ).populate("customer", "name email phone address");
 
     return res.json(invoice);
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({ message: "Invoice number already exists" });
+    }
     return res.status(500).json({ message: error.message });
   }
 };

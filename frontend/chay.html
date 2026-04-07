@@ -1712,19 +1712,21 @@
             const waBtn = document.getElementById("whatsappShareBtn");
             const hasItems = currentBillItems.length > 0;
 
-            // Save Bill: disabled when empty OR already saved
-            savBtn.disabled = !hasItems || isBillSaved;
-
-            // Visibility after save
-            if (editBtn) editBtn.style.display = isBillSaved ? "inline-flex" : "none";
-            if (pdfBtn) pdfBtn.style.display = isBillSaved ? "inline-flex" : "none";
-            if (printBtn) printBtn.style.display = isBillSaved ? "inline-flex" : "none";
-            if (waBtn) waBtn.style.display = isBillSaved ? "inline-flex" : "none";
-
-            // New Bill button pulse
+            // Visibility Logic
             if (isBillSaved) {
+                savBtn.style.display = "none";
+                editBtn.style.display = "inline-flex";
+                pdfBtn.style.display = "inline-flex";
+                printBtn.style.display = "inline-flex";
+                waBtn.style.display = "inline-flex";
                 rstBtn.classList.add("new-bill-active");
             } else {
+                savBtn.style.display = "inline-flex";
+                savBtn.disabled = !hasItems;
+                editBtn.style.display = "none";
+                pdfBtn.style.display = "none";
+                printBtn.style.display = "none";
+                waBtn.style.display = "none";
                 rstBtn.classList.remove("new-bill-active");
             }
         }
@@ -1758,25 +1760,35 @@
         }
 
         function resetCurrentBill() {
-            if (currentBillItems.length > 0) {
+            if (currentBillItems.length > 0 && !isBillSaved) {
                 showConfirm("Clear entire bill? All items will be removed.", "danger").then(ok => {
                     if (ok) {
-                        currentBillItems = [];
-                        isBillSaved = false;
-                        currentSavedInvoiceId = null;
-                        document.getElementById("saveBillBtn").style.display = "inline-flex";
-                        document.getElementById("printBillBtn").style.display = "none";
-                        renderBillTable();
-                        customerNameInput.value = "";
+                        performReset();
                     }
                 });
             } else {
-                isBillSaved = false;
-                currentSavedInvoiceId = null;
-                document.getElementById("saveBillBtn").style.display = "inline-flex";
-                document.getElementById("printBillBtn").style.display = "none";
-                customerNameInput.value = "";
+                performReset();
             }
+        }
+
+        function performReset() {
+            currentBillItems = [];
+            isBillSaved = false;
+            currentSavedInvoiceId = null;
+            
+            // UI Resets
+            document.getElementById("saveBillBtn").style.display = "inline-flex";
+            document.getElementById("saveBillBtn").disabled = true;
+            document.getElementById("editBillBtn").style.display = "none";
+            document.getElementById("printBillBtn").style.display = "none";
+            document.getElementById("downloadPdfBtn").style.display = "none";
+            document.getElementById("whatsappShareBtn").style.display = "none";
+            
+            customerNameInput.value = "";
+            document.getElementById("invoiceNoDisplay").value = getNextInvoiceNo();
+            
+            renderBillTable();
+            showAlert("New bill started.", "success");
         }
 
         async function saveBillHandler() {
@@ -1808,13 +1820,13 @@
 
             // 2. Prepare Invoice
             const invNo = document.getElementById("invoiceNoDisplay").value || getNextInvoiceNo();
-            const payStatus = document.getElementById("paymentStatus").value.toLowerCase(); // 'paid' or 'pending'
+            const payStatus = document.getElementById("paymentStatus").value.toLowerCase(); 
 
             const invoiceData = {
                 invoiceNumber: invNo,
                 customer: customerId,
                 status: payStatus === 'paid' ? 'paid' : 'pending',
-                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // +7 days
+                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
                 items: currentBillItems.map(it => {
                     const prod = products[it.productKey];
                     return {
@@ -1826,21 +1838,30 @@
                 })
             };
 
-            // 3. Save Invoice
-            const res = await fetchWithAuth('/invoices', {
-                method: 'POST',
-                body: JSON.stringify(invoiceData)
-            });
+            // 3. Save or Update Invoice
+            let res;
+            const isUpdating = !!currentSavedInvoiceId;
+            if (isUpdating) {
+                // Update existing
+                res = await fetchWithAuth(`/invoices/${currentSavedInvoiceId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(invoiceData)
+                });
+            } else {
+                // Create new
+                res = await fetchWithAuth('/invoices', {
+                    method: 'POST',
+                    body: JSON.stringify(invoiceData)
+                });
+            }
 
             if (res) {
                 isBillSaved = true;
-                currentSavedInvoiceId = res._id; // Capture ID for later editing/deletion
-                document.getElementById("saveBillBtn").style.display = "none";
-                document.getElementById("downloadPdfBtn").style.display = "inline-flex";
-                document.getElementById("whatsappShareBtn").style.display = "inline-flex";
-
-                showAlert(`Bill #${invNo} saved to database!`, "success");
-                loadDataFromServer(); // Refresh all state
+                currentSavedInvoiceId = res._id; 
+                
+                showAlert(`Bill #${invNo} ${isUpdating ? 'updated' : 'saved'} successfully!`, "success");
+                
+                await loadDataFromServer(); // Refresh all state
                 renderBillTable();
             }
         }
@@ -1849,22 +1870,11 @@
             if (!isBillSaved) return;
             if (currentBillItems.length === 0) return;
 
-            showConfirm("Unlock this bill for editing? This will restore the deducted stock on the server until you save again.", "warning").then(async ok => {
+            showConfirm("Unlock this bill for editing?", "warning").then(ok => {
                 if (ok) {
-                    if (currentSavedInvoiceId) {
-                        // Delete from server to restore stock (newly implemented in backend)
-                        const res = await fetchWithAuth(`/invoices/${currentSavedInvoiceId}`, { method: 'DELETE' });
-                        if (res) {
-                            currentSavedInvoiceId = null;
-                        } else {
-                            showAlert("Warning: Invoice could not be removed from server. Your edit might cause duplicate records.", "warning");
-                        }
-                    }
-
                     isBillSaved = false;
-                    document.getElementById("saveBillBtn").style.display = "inline-flex";
-                    renderBillTable(); // Show edit/remove buttons again
-                    showAlert("Bill unlocked! Stock has been restored on server.", "edit");
+                    renderBillTable(); 
+                    showAlert("Bill unlocked for editing. Click Save Bill when finished.", "edit");
                 }
             });
         }
