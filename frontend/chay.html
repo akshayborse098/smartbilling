@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -508,21 +508,25 @@
                 padding: 1rem;
                 gap: 15px;
             }
-            .app-header > div:first-child {
+
+            .app-header>div:first-child {
                 flex-direction: column;
                 align-items: flex-start !important;
                 gap: 10px !important;
             }
+
             .profile-area {
                 border-left: none !important;
                 padding-left: 0 !important;
-                border-top: 1px solid rgba(255,255,255,0.1);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
                 padding-top: 10px;
                 width: 100%;
             }
+
             .logo-area h1 {
                 font-size: 1.4rem;
             }
+
             .date-badge {
                 position: absolute;
                 top: 1rem;
@@ -534,8 +538,10 @@
 
         @media (max-width: 450px) {
             .date-badge {
-                display: none; /* Hide date on very small screens to save space */
+                display: none;
+                /* Hide date on very small screens to save space */
             }
+
             .profile-info {
                 max-width: 150px;
                 overflow: hidden;
@@ -869,7 +875,7 @@
                 <h1><i class="fas fa-store"></i> SmartBilling</h1>
                 <p>Wholesale Management</p>
             </div>
-            
+
             <div class="profile-area" style="border-left: 1px solid rgba(255,255,255,0.2); padding-left: 20px;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div class="profile-avatar">
@@ -1035,14 +1041,18 @@
                 </div>
                 <div
                     style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 12px;">
-                    <div><strong>GRAND TOTAL</strong> <span class="total-price" id="grandTotalSpan">Γé╣ 0.00</span></div>
+                    <div><strong>GRAND TOTAL</strong> <span class="total-price" id="grandTotalSpan">Γé╣ 0.00</span>
+                    </div>
                     <div class="bill-actions">
                         <button id="saveBillBtn" class="primary-btn"><i class="fas fa-save"></i> Save Bill</button>
                         <button id="editBillBtn" class="secondary-btn" style="display:none;"><i class="fas fa-edit"></i>
                             Edit Bill</button>
-                        <button id="downloadPdfBtn" class="pdf-btn" style="display:none;"><i class="fas fa-file-pdf"></i> Download PDF</button>
-                        <button id="printBillBtn" class="secondary-btn" style="display:none;"><i class="fas fa-print"></i> Print Bill</button>
-                        <button id="whatsappShareBtn" class="wa-btn" style="display:none;"><i class="fab fa-whatsapp"></i> Share on WA</button>
+                        <button id="downloadPdfBtn" class="pdf-btn" style="display:none;"><i
+                                class="fas fa-file-pdf"></i> Download PDF</button>
+                        <button id="printBillBtn" class="secondary-btn" style="display:none;"><i
+                                class="fas fa-print"></i> Print Bill</button>
+                        <button id="whatsappShareBtn" class="wa-btn" style="display:none;"><i
+                                class="fab fa-whatsapp"></i> Share on WA</button>
                         <button id="resetBillBtn" class="secondary-btn"><i class="fas fa-plus"></i> New Bill</button>
                     </div>
                 </div>
@@ -1276,8 +1286,8 @@
         const token = localStorage.getItem("prostock_token");
         // Change this URL to your deployed backend URL before deploying the frontend
         const DEPLOYED_BACKEND_URL = "https://smartbilling-l47g.onrender.com";
-        const API_URL = window.location.hostname === 'localhost' || window.location.protocol === 'file:' 
-            ? 'http://localhost:5000/api' 
+        const API_URL = window.location.hostname === 'localhost' || window.location.protocol === 'file:'
+            ? 'http://localhost:5000/api'
             : `${DEPLOYED_BACKEND_URL}/api`;
 
         if (!userid || !token) {
@@ -1775,7 +1785,7 @@
             currentBillItems = [];
             isBillSaved = false;
             currentSavedInvoiceId = null;
-            
+
             // UI Resets
             document.getElementById("saveBillBtn").style.display = "inline-flex";
             document.getElementById("saveBillBtn").disabled = true;
@@ -1783,10 +1793,10 @@
             document.getElementById("printBillBtn").style.display = "none";
             document.getElementById("downloadPdfBtn").style.display = "none";
             document.getElementById("whatsappShareBtn").style.display = "none";
-            
+
             customerNameInput.value = "";
             document.getElementById("invoiceNoDisplay").value = getNextInvoiceNo();
-            
+
             renderBillTable();
             showAlert("New bill started.", "success");
         }
@@ -1820,7 +1830,7 @@
 
             // 2. Prepare Invoice
             const invNo = document.getElementById("invoiceNoDisplay").value || getNextInvoiceNo();
-            const payStatus = document.getElementById("paymentStatus").value.toLowerCase(); 
+            const payStatus = document.getElementById("paymentStatus").value.toLowerCase();
 
             const invoiceData = {
                 invoiceNumber: invNo,
@@ -1857,26 +1867,28 @@
 
             if (res) {
                 isBillSaved = true;
-                currentSavedInvoiceId = res._id; 
-                
+                currentSavedInvoiceId = res._id;
+
                 showAlert(`Bill #${invNo} ${isUpdating ? 'updated' : 'saved'} successfully!`, "success");
-                
+
                 await loadDataFromServer(); // Refresh all state
                 renderBillTable();
             }
         }
 
-        async function editBillHandler() {
-            if (!isBillSaved) return;
-            if (currentBillItems.length === 0) return;
 
-            showConfirm("Unlock this bill for editing?", "warning").then(ok => {
-                if (ok) {
-                    isBillSaved = false;
-                    renderBillTable(); 
-                    showAlert("Bill unlocked for editing. Click Save Bill when finished.", "edit");
-                }
-            });
+        async function editBillHandler() {
+            const ok = await showConfirm(
+                "Unlock this bill for editing? This will restore the deducted stock until you save again.",
+                "warning"
+            );
+
+            if (ok) {
+                isBillSaved = false;   // 🔥 MOST IMPORTANT
+                renderBillTable();     // 🔥 UI refresh
+
+                showAlert("Edit mode enabled!", "edit");
+            }
         }
 
         // Helper to get unified bill data
@@ -2041,7 +2053,7 @@
 
         function shareWhatsAppHandler() {
             if (currentBillItems.length === 0) return;
-            
+
             // First trigger PDF download
             downloadPdfHandler();
 
