@@ -1469,7 +1469,7 @@
         function formatINR(val) { return `Γé╣ ${Number(val).toFixed(2)}`; }
         function escapeHtml(str) { if (!str) return ""; return str.replace(/[&<>]/g, function (m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
 
-        function persistProducts() { localStorage.setItem(productsKey, JSON.stringify(products)); }
+
 
         // Render product table + dropdown
         function renderProducts() {
