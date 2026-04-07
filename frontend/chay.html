@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1281,22 +1281,13 @@
     </div>
 
     <script>
-
         const productsKey = "products";
-        let products = [];
+        let products = {};
 
-        <script>
+        function persistProducts() {
+            localStorage.setItem(productsKey, JSON.stringify(products));
+        }
 
-            const productsKey = "products";   // ✅ key
-            let products = [];                // ✅ data
-
-            function persistProducts() {      // ✅ function
-                localStorage.setItem(productsKey, JSON.stringify(products));
-}
-
-        // baaki tumhara code...
-
-    </script>
 
 
     // ======================== MERN DATABASE INTEGRATION ========================
@@ -1312,7 +1303,6 @@
     window.location.href = "login.html";
     }
 
-    let products = {}; // Now a Map-like object from server
     let sales = []; // Now from server
     let purchases = []; // Now from server
 
@@ -1856,10 +1846,10 @@
                     );
 
                     if (ok) {
-                    isBillSaved = false; // 🔥 MOST IMPORTANT
-                    renderBillTable(); // 🔥 UI refresh
+                        isBillSaved = false;
+                        renderBillTable();
 
-                    showAlert("Edit mode enabled!", "edit");
+                        showAlert("Edit mode enabled!", "edit");
                     }
                     }
 
